@@ -52,6 +52,7 @@ class SignUpView extends StatelessWidget {
                           hintText: 'Phone Number',
                           icon: Icons.person,
                           controller: _phoneController,
+                          keyboardInputType: TextInputType.phone,
                         ),
                         CustomInputField(
                             hintText: 'Password',

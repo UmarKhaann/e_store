@@ -21,7 +21,7 @@ class HomeView extends StatelessWidget {
             child: FutureBuilder(
                 future: userData,
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  return !snapshot.data!.exists
+                  return snapshot.data == null
                       ? const CircularProgressIndicator(color: Colors.black,)
                       : FittedBox(child: Text(snapshot.data!['fullName']));
                 })),
@@ -46,7 +46,7 @@ class HomeView extends StatelessWidget {
         children: [
           const Expanded(
               child: Center(
-            child: Text('Home Screen'),
+            child: Text('Back to normal'),
           )),
           Hero(
             tag: 'btn',
