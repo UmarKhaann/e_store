@@ -11,11 +11,12 @@ class SignUpView extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       body: SafeArea(
         child: ValueListenableBuilder(
           valueListenable: AuthViewModel.signUpBtnLoading,
@@ -37,10 +38,20 @@ class SignUpView extends StatelessWidget {
                           controller: _usernameController,
                         ),
                         CustomInputField(
+                          hintText: 'Full Name',
+                          icon: Icons.person,
+                          controller: _fullNameController,
+                        ),
+                        CustomInputField(
                           hintText: 'Email',
                           icon: Icons.mail,
                           controller: _emailController,
                           keyboardInputType: TextInputType.emailAddress,
+                        ),
+                        CustomInputField(
+                          hintText: 'Phone Number',
+                          icon: Icons.person,
+                          controller: _phoneController,
                         ),
                         CustomInputField(
                             hintText: 'Password',
@@ -56,9 +67,11 @@ class SignUpView extends StatelessWidget {
                           onPressed: () {
                             AuthViewModel.signUpUser(
                                 context: context,
+                                username: _usernameController.text,
+                                fullName: _fullNameController.text,
                                 email: _emailController.text,
-                                password: _passwordController.text,
-                                username: _usernameController.text);
+                                phone: _phoneController.text,
+                                password: _passwordController.text);
                           },
                         ),
                         Row(
