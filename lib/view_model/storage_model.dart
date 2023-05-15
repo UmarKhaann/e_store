@@ -8,14 +8,13 @@ import 'package:provider/provider.dart';
 import '../provider/imageProvider.dart';
 import '../utils/utils.dart';
 
-
 class StorageModel{
   static final ValueNotifier<bool> btnUploadData = ValueNotifier<bool>(false);
   static final FirebaseFirestore fireStore = FirebaseFirestore.instance;
   static final FirebaseAuth auth = FirebaseAuth.instance;
 
 
-  static void uploadDataToFirebase({context, title, price, description})async{
+  static void uploadProductToFirebase({required context,required title,required price,required description, required uploadType})async{
     final provider = Provider.of<ImageProviderFromGallery>(context, listen: false);
     final userId = auth.currentUser!.uid.toString();
 
@@ -24,7 +23,7 @@ class StorageModel{
     Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName');
     UploadTask uploadTask = storageReference.putFile(File(provider.image.path));
     TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() async{
-      final newUser = fireStore.collection('productsForSale').doc(DateTime.now().microsecondsSinceEpoch.toString());
+      final newUser = fireStore.collection(uploadType).doc(DateTime.now().microsecondsSinceEpoch.toString());
       final imageUrl = await storageReference.getDownloadURL();
       await newUser.set({
         'uid': userId,

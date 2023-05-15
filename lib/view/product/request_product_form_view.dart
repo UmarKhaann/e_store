@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/imageProvider.dart';
 
-class ProductSellingFormView extends StatelessWidget {
-  ProductSellingFormView({Key? key}) : super(key: key);
+class RequestProductFormView extends StatelessWidget {
+  RequestProductFormView({Key? key}) : super(key: key);
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -22,7 +22,7 @@ class ProductSellingFormView extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Sell Product'),
+        title: const Text('Request Product'),
         centerTitle: true,
       ),
       body: ValueListenableBuilder(
@@ -57,8 +57,8 @@ class ProductSellingFormView extends StatelessWidget {
                                 : Positioned(
                                 bottom: height * .01,
                                 right: width * .3,
-                                child: const Row(
-                                  children: [
+                                child: Row(
+                                  children: const [
                                     Icon(
                                       Icons.add,
                                       color: Colors.black,
@@ -98,7 +98,7 @@ class ProductSellingFormView extends StatelessWidget {
                           title: titleController.text,
                           price: priceController.text,
                           description: descriptionController.text,
-                        uploadType: 'ProductsForSale'
+                          uploadType: 'productsRequest'
                       );
                     }),
                 const Divider(),

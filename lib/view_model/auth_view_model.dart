@@ -59,7 +59,7 @@ class AuthViewModel {
       signUpBtnLoading.value = true;
       final user = await _fireStore.collection('usernames').doc(username).get();
       if (user.exists) {
-        Utils.flushBarMessage(context, 'Username already exists');
+        Utils.flushBarMessage(context, 'Username already taken!');
         signUpBtnLoading.value = false;
       } else {
         _auth.createUserWithEmailAndPassword(email: email, password: password)
@@ -67,7 +67,7 @@ class AuthViewModel {
           signUpBtnLoading.value = false;
           Navigator.pushReplacementNamed(context, RoutesName.homeView);
           final newUser = _fireStore.collection('users').doc(value.user!.uid);
-          _fireStore.collection('usernames').doc(value.user!.uid).set({'username': username});
+          _fireStore.collection('usernames').doc(username).set({'username': username});
           await newUser.set({
             'username': username,
             'fullName': fullName,
