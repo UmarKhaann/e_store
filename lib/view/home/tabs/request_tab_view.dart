@@ -1,3 +1,4 @@
+import 'package:e_store/res/components/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class RequestTabView extends StatelessWidget {
@@ -45,11 +46,10 @@ class RequestTabView extends StatelessWidget {
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(10),
                                 bottomRight: Radius.circular(10),
-
                               ),
                               child: Image.network(
                                   width: double.infinity,
-                                  height: height * .3,
+                                  height: height * .25,
                                   fit: BoxFit.cover,
                                   docs['imageUrl'].toString()),
                             ),

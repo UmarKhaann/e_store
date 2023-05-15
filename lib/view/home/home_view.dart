@@ -66,22 +66,32 @@ class HomeView extends StatelessWidget {
               children: [
                 SizedBox(
                   width: width * .45,
-                  child: CustomButton(
-                      text: "Sell a product",
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, RoutesName.productSellingFormView);
-                      }),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                    ),
+                    child: CustomButton(
+                        text: "Sell a product",
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, RoutesName.productSellingFormView);
+                        }),
+                  ),
                 ),
                 const VerticalDivider(),
                 SizedBox(
                   width: width * .45,
-                  child: CustomButton(
-                      text: "Request a product",
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, RoutesName.requestProductFormView);
-                      }),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomRight: Radius.circular(10),
+                    ),
+                    child: CustomButton(
+                        text: "Request a product",
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, RoutesName.requestProductFormView);
+                        }),
+                  ),
                 ),
               ],
             ),

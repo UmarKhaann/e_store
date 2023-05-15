@@ -52,7 +52,7 @@ class CustomCard extends StatelessWidget {
                         'Price: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text('${docs['price'].toString()}\$'),
+                      Text('Rs ${docs['price'].toString()}'),
                     ],
                   ),
                 ],

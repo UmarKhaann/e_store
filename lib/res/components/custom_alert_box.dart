@@ -25,7 +25,6 @@ class CustomAlertBox extends StatelessWidget {
               Navigator.pushReplacementNamed(context, RoutesName.loginView);
               Utils.flushBarMessage(
                   context, 'User logged out successfully');
-              Navigator.of(context).pop(true);
             }),
         CustomButton(
             height: 35,
