@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+
+class RequestTabView extends StatelessWidget {
+  final Stream productsRequest;
+  const RequestTabView({
+    required this.productsRequest,
+    Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return StreamBuilder(
+      stream: productsRequest,
+      builder: (context, snapShot) {
+        if (!snapShot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                  itemCount: snapShot.data!.docs.length,
+                  itemBuilder: (context, index){
+                    final reversedIndex =
+                        (snapShot.data!.docs.length - 1) - index;
+                    final docs = snapShot.data!.docs[reversedIndex];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Card(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(docs['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                                  Text(docs['time'], style: const TextStyle(color: Colors.grey, fontSize: 13),),
+                                  SizedBox(height: height * .01),
+                                  Text(docs['description']),
+                                ],
+                              ),
+                            ),
+                            ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+
+                              ),
+                              child: Image.network(
+                                  width: double.infinity,
+                                  height: height * .3,
+                                  fit: BoxFit.cover,
+                                  docs['imageUrl'].toString()),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  })
+          );
+        }
+      },
+    );
+  }
+}

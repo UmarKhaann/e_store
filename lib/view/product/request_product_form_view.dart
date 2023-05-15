@@ -57,8 +57,8 @@ class RequestProductFormView extends StatelessWidget {
                                 : Positioned(
                                 bottom: height * .01,
                                 right: width * .3,
-                                child: Row(
-                                  children: const [
+                                child: const Row(
+                                  children: [
                                     Icon(
                                       Icons.add,
                                       color: Colors.black,

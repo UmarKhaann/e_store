@@ -9,7 +9,7 @@ class ImageProviderFromGallery extends ChangeNotifier {
 
   Future<void> setImage() async {
     final XFile? pickedFile =
-    await _imagePicker.pickImage(source: ImageSource.gallery);
+    await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70);
 
     if (pickedFile != null) {
         _image = pickedFile;

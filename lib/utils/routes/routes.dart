@@ -1,5 +1,6 @@
 import 'package:e_store/view/auth/login_view.dart';
 import 'package:e_store/view/auth/singup_view.dart';
+import 'package:e_store/view/product/product_details_view.dart';
 import 'package:e_store/view/product/product_selling_form_view.dart';
 import 'package:e_store/view/product/request_product_form_view.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class Routes {
 
       case RoutesName.requestProductFormView:
         return MaterialPageRoute(builder: (_) => RequestProductFormView());
+
+      case RoutesName.productDetailView:
+        return MaterialPageRoute(builder: (_) => ProductDetailsView(docs: settings.arguments));
 
       default:
         return MaterialPageRoute(builder: (_) {

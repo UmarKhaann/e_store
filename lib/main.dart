@@ -19,11 +19,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _currentUser;
 
   @override
   Widget build(BuildContext context) {
-    _currentUser = _auth.currentUser;
+    final User? currentUser = _auth.currentUser;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ImageProviderFromGallery()),
@@ -35,7 +34,7 @@ class MyApp extends StatelessWidget {
         theme: CustomTheme.lightTheme,
         darkTheme: CustomTheme.darkTheme,
         initialRoute:
-        _currentUser == null ? RoutesName.loginView : RoutesName.homeView,
+        currentUser == null ? RoutesName.loginView : RoutesName.homeView,
         onGenerateRoute: Routes.generateRoute,
       ),
     );

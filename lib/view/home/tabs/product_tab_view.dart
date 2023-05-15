@@ -1,10 +1,10 @@
+import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
-
 import '../../../res/components/custom_card.dart';
 
-class SellingTabView extends StatelessWidget {
+class ProductTabView extends StatelessWidget {
   final Stream sellingProducts;
-  const SellingTabView({
+  const ProductTabView({
     required this.sellingProducts,
     Key? key}) : super(key: key);
 
@@ -14,7 +14,7 @@ class SellingTabView extends StatelessWidget {
       stream: sellingProducts,
       builder: (context, snapShot) {
         if (!snapShot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Colors.black,));
         } else {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -31,7 +31,9 @@ class SellingTabView extends StatelessWidget {
                   final reversedIndex =
                       (snapShot.data!.docs.length - 1) - index;
                   final docs = snapShot.data!.docs[reversedIndex];
-                  return CustomCard(docs: docs);
+                  return CustomCard(docs: docs, onTap: () {
+                    Navigator.pushNamed(context, RoutesName.productDetailView, arguments: docs);
+                  });
                 }),
           );
         }
