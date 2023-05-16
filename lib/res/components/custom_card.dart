@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomCard extends StatelessWidget {
   final Function()? onTap;
   final QueryDocumentSnapshot<Map<String, dynamic>> docs;
 
-  const CustomCard({required this.docs,
-    required this.onTap,
-    Key? key}) : super(key: key);
+  const CustomCard({required this.docs, required this.onTap, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return InkWell(
       onTap: onTap,
@@ -19,13 +20,19 @@ class CustomCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(10), right:
-              Radius.circular(10)),
-              child: Image.network(
-                  width: double.infinity,
-                  height: height * .2,
-                  fit: BoxFit.cover,
-                  docs['imageUrl'].toString()),
+                  left: Radius.circular(10), right: Radius.circular(10)),
+              child: CachedNetworkImage(
+                width: width,
+                height: height * .2,
+                fit: BoxFit.cover,
+                imageUrl: docs['imageUrl'].toString(),
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                            value: downloadProgress.progress)),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
             SizedBox(
               height: height * .01,

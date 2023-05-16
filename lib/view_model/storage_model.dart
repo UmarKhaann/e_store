@@ -23,15 +23,13 @@ class StorageModel{
     String fileName = basename(provider.image.path);
     Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName');
     UploadTask uploadTask = storageReference.putFile(File(provider.image.path));
-    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() async{
+    await uploadTask.whenComplete(() async{
       final newUser = fireStore.collection(uploadType).doc(DateTime.now().microsecondsSinceEpoch.toString());
       final name = await fireStore.collection('users').doc(userId).get();
       final imageUrl = await storageReference.getDownloadURL();
       DateTime now = DateTime.now();
       String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
       String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
-
-
       await newUser.set({
         'uid': userId,
         'name' : name['fullName'].toString(),
@@ -42,6 +40,7 @@ class StorageModel{
         'time' : customFormattedDateTime,
         'phone' : name['phone'].toString()
       }).then((value) {
+        provider.resetImage();
         Navigator.pop(context);
         Utils.flushBarMessage(context, 'Data uploaded Successfully');
       });

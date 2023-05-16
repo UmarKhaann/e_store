@@ -13,7 +13,6 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     final sellingProducts = fireStore.collection('ProductsForSale').snapshots();
     final productsRequest = fireStore.collection('productsRequest').snapshots();
 
@@ -39,7 +38,7 @@ class HomeView extends StatelessWidget {
             indicatorColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             labelColor: Colors.black,
-            overlayColor: MaterialStateProperty.all(Colors.grey[300]),
+            overlayColor: MaterialStateProperty.all(Colors.grey[400]),
             dividerColor: Colors.transparent,
             tabs: const [
               Tab(
@@ -94,9 +93,7 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            const Divider()
-          ],
+            ),],
         ),
       ),
     );
