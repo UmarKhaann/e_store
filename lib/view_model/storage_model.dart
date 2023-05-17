@@ -11,21 +11,21 @@ import '../utils/utils.dart';
 
 class StorageModel{
   static final ValueNotifier<bool> btnUploadData = ValueNotifier<bool>(false);
-  static final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  static final FirebaseAuth auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
   static void uploadProductToFirebase({required context,required title,required price,required description, required uploadType})async{
     final provider = Provider.of<ImageProviderFromGallery>(context, listen: false);
-    final userId = auth.currentUser!.uid.toString();
+    final userId = _auth.currentUser!.uid.toString();
 
     btnUploadData.value = true;
     String fileName = basename(provider.image.path);
     Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName');
     UploadTask uploadTask = storageReference.putFile(File(provider.image.path));
     await uploadTask.whenComplete(() async{
-      final newUser = fireStore.collection(uploadType).doc(DateTime.now().microsecondsSinceEpoch.toString());
-      final name = await fireStore.collection('users').doc(userId).get();
+      final newUser = _fireStore.collection(uploadType).doc(DateTime.now().microsecondsSinceEpoch.toString());
+      final name = await _fireStore.collection('users').doc(userId).get();
       final imageUrl = await storageReference.getDownloadURL();
       DateTime now = DateTime.now();
       String formattedDateTime = DateFormat.MMMd().add_jm().format(now);

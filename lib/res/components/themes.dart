@@ -5,9 +5,9 @@ class CustomTheme{
     return ThemeData(
       primarySwatch: Colors.blue,
       useMaterial3: true,
-      scaffoldBackgroundColor: Colors.grey[400],
-      appBarTheme: AppBarTheme(backgroundColor: Colors.grey[400], centerTitle: true),
-      cardTheme: CardTheme(color: Colors.grey[200]),
+      scaffoldBackgroundColor: Colors.grey[300],
+      appBarTheme: AppBarTheme(backgroundColor: Colors.grey[300], centerTitle: true),
+
     );
   }
 

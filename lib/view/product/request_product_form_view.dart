@@ -9,9 +9,9 @@ import '../../provider/imageProvider.dart';
 class RequestProductFormView extends StatelessWidget {
   RequestProductFormView({Key? key}) : super(key: key);
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,14 +78,14 @@ class RequestProductFormView extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomInputField(hintText: 'Title', controller: titleController),
+                CustomInputField(hintText: 'Title', controller: _titleController),
                 CustomInputField(
                     hintText: 'Price',
-                    controller: priceController,
+                    controller: _priceController,
                     keyboardInputType: TextInputType.phone),
                 CustomInputField(
                   hintText: 'Description',
-                  controller: descriptionController,
+                  controller: _descriptionController,
                   maxLines: 6,
                 ),
                 Expanded(child: Container()),
@@ -95,9 +95,9 @@ class RequestProductFormView extends StatelessWidget {
                     onPressed: () {
                       StorageModel.uploadProductToFirebase(
                           context: context,
-                          title: titleController.text,
-                          price: priceController.text,
-                          description: descriptionController.text,
+                          title: _titleController.text,
+                          price: _priceController.text,
+                          description: _descriptionController.text,
                           uploadType: 'productsRequest'
                       );
                     }),

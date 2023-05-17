@@ -92,10 +92,7 @@ class ProductDetailsView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              bottomLeft: Radius.circular(10),
-                            ),
+                            borderRadius: BorderRadius.circular(3),
                             child: CustomButton(
                                 width: 120,
                                 text: 'SMS',
@@ -104,22 +101,13 @@ class ProductDetailsView extends StatelessWidget {
                                       phone: docs['phone']);
                                 }),
                           ),
-                          CustomButton(
-                              width: 120,
-                              text: 'CALL',
-                              onPressed: () {
-                                ProductDetailModel.launchCall(phone: docs['phone']);
-                              }),
                           ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(50),
-                              topRight: Radius.circular(10),
-                            ),
+                            borderRadius: BorderRadius.circular(3),
                             child: CustomButton(
                                 width: 120,
-                                text: 'WhatsApp',
+                                text: 'CALL',
                                 onPressed: () {
-                                  ProductDetailModel.launchWhatsApp();
+                                  ProductDetailModel.launchCall(phone: docs['phone']);
                                 }),
                           ),
                         ],

@@ -24,7 +24,8 @@ class HomeView extends StatelessWidget {
           actions: [
             TextButton(
                 onPressed: () {
-                  showDialog(context: context, builder: (_) => const CustomAlertBox());
+                  showDialog(
+                      context: context, builder: (_) => const CustomAlertBox());
                 },
                 child: const Text(
                   'Log Out',
@@ -66,9 +67,7 @@ class HomeView extends StatelessWidget {
                 SizedBox(
                   width: width * .45,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                    ),
+                    borderRadius: BorderRadius.circular(3),
                     child: CustomButton(
                         text: "Sell a product",
                         onPressed: () {
@@ -81,9 +80,7 @@ class HomeView extends StatelessWidget {
                 SizedBox(
                   width: width * .45,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(10),
-                    ),
+                    borderRadius: BorderRadius.circular(3),
                     child: CustomButton(
                         text: "Request a product",
                         onPressed: () {
@@ -93,7 +90,8 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
               ],
-            ),],
+            ),
+          ],
         ),
       ),
     );
