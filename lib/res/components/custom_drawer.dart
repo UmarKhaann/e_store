@@ -43,7 +43,9 @@ class CustomDrawer extends StatelessWidget {
               return SwitchListTile(
                   title: const Text('Dark Mode'),
                   value: (themeChangerProvider.isDarkTheme),
-                  inactiveThumbColor: Theme.of(context).canvasColor,
+                  inactiveThumbColor: Theme.of(context).scaffoldBackgroundColor,
+                  inactiveTrackColor: Theme.of(context).canvasColor,
+                  activeColor: Theme.of(context).iconTheme.color,
                   onChanged: (value){
                     themeChangerProvider.setIsDarkTheme(!themeChangerProvider.isDarkTheme);
                     themeChangerProvider.setThemeMode(themeChangerProvider.isDarkTheme ? ThemeMode.dark : ThemeMode.light);

@@ -1,6 +1,5 @@
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:flutter/material.dart';
-
 import '../../utils/routes/routes_name.dart';
 import '../../utils/utils.dart';
 import '../../view_model/auth_view_model.dart';
@@ -11,6 +10,7 @@ class CustomAlertBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: const Text('Alert!'),
       content: const Text('Do you really want to Log out?'),
