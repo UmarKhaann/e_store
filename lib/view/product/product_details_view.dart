@@ -52,7 +52,7 @@ class ProductDetailsView extends StatelessWidget {
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  color: Colors.grey[100],
+                  color: Theme.of(context).cardColor,
                   height: height * .65,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,9 +83,9 @@ class ProductDetailsView extends StatelessWidget {
                           ),
                           const Text(
                             'Description',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                           ),
-                          Text(docs['description']),
+                          Text(docs['description'], style: const TextStyle(color: Colors.grey),),
                         ],
                       ),
                       Row(

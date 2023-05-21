@@ -26,10 +26,8 @@ class CustomInputField extends StatelessWidget {
       builder: (context, value, child) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
             child: TextFormField(
               maxLines: maxLines,
               controller: controller,
@@ -42,7 +40,7 @@ class CustomInputField extends StatelessWidget {
                       ? const EdgeInsets.symmetric(horizontal: 10, vertical: 5)
                       : null,
                   prefixIcon:
-                      icon == null ? null : Icon(icon, color: Colors.black),
+                      icon == null ? null : Icon(icon),
                   suffixIcon: !isPasswordField
                       ? null
                       : IconButton(

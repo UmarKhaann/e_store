@@ -1,4 +1,5 @@
 import 'package:e_store/provider/imageProvider.dart';
+import 'package:e_store/provider/themeChangerProvider.dart';
 import 'package:e_store/res/components/themes.dart';
 import 'package:e_store/utils/routes/routes.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
@@ -27,16 +28,21 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ImageProviderFromGallery()),
+        ChangeNotifierProvider(create: (_) => ThemeChangerProvider()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.system,
-        title: 'E-Store',
-        theme: CustomTheme.lightTheme,
-        darkTheme: CustomTheme.darkTheme,
-        initialRoute:
-        currentUser == null ? RoutesName.loginView : RoutesName.homeView,
-        onGenerateRoute: Routes.generateRoute,
+      child: Builder(
+        builder: (BuildContext context){
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: Provider.of<ThemeChangerProvider>(context).themeMode,
+            title: 'E-Store',
+            theme: CustomTheme.lightTheme,
+            darkTheme: CustomTheme.darkTheme,
+            initialRoute:
+            currentUser == null ? RoutesName.loginView : RoutesName.homeView,
+            onGenerateRoute: Routes.generateRoute,
+          );
+        },
       ),
     );
   }

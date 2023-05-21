@@ -6,6 +6,7 @@ import 'package:e_store/view/product/request_product_form_view.dart';
 import 'package:flutter/material.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 
+import '../../view/chat_view.dart';
 import '../../view/home/home_view.dart';
 
 class Routes {
@@ -27,7 +28,11 @@ class Routes {
         return MaterialPageRoute(builder: (_) => RequestProductFormView());
 
       case RoutesName.productDetailView:
-        return MaterialPageRoute(builder: (_) => ProductDetailsView(docs: settings.arguments));
+        return MaterialPageRoute(
+            builder: (_) => ProductDetailsView(docs: settings.arguments));
+
+      case RoutesName.chatView:
+        return MaterialPageRoute(builder: (_) => ChatView());
 
       default:
         return MaterialPageRoute(builder: (_) {

@@ -19,7 +19,6 @@ class CustomAlertBox extends StatelessWidget {
             height: 35,
             width: 90,
             text: 'Yes',
-            bgColor: Colors.red,
             onPressed: () {
               AuthViewModel.signOutUser();
               Navigator.pushReplacementNamed(context, RoutesName.loginView);

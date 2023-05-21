@@ -6,8 +6,6 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final double width;
   final double height;
-  final Color bgColor;
-  final Color textColor;
 
   const CustomButton(
       {required this.text,
@@ -15,8 +13,6 @@ class CustomButton extends StatelessWidget {
       this.isLoading = false,
         this.height = 50,
         this.width = double.infinity,
-        this.bgColor = Colors.black,
-        this.textColor = Colors.white,
       Key? key})
       : super(key: key);
 
@@ -25,17 +21,17 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
         width: width,
         height: height,
-        decoration: BoxDecoration(
-          color: bgColor,
-        ),
         child: isLoading
             ? const Center(child: CircularProgressIndicator(color: Colors.white,))
             : Center(
                 child: Text(
                 text,
-                style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               )),
       ),
     );

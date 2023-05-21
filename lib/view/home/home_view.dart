@@ -1,5 +1,5 @@
-import 'package:e_store/res/components/custom_alert_box.dart';
 import 'package:e_store/res/components/custom_button.dart';
+import 'package:e_store/res/components/custom_drawer.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view/home/tabs/request_tab_view.dart';
 import 'package:e_store/view/home/tabs/product_tab_view.dart';
@@ -19,29 +19,19 @@ class HomeView extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: const CustomDrawer(),
         appBar: AppBar(
           title: const Text("E-Store"),
           actions: [
-            TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context, builder: (_) => const CustomAlertBox());
-                },
-                child: const Text(
-                  'Log Out',
-                  style: TextStyle(color: Colors.black),
-                )),
+            IconButton(onPressed: (){
+              Navigator.pushNamed(context, RoutesName.chatView);
+            }, icon: const Icon(Icons.chat)),
             const SizedBox(
               width: 10,
             )
           ],
-          bottom: TabBar(
-            indicatorColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.black,
-            overlayColor: MaterialStateProperty.all(Colors.grey[400]),
-            dividerColor: Colors.transparent,
-            tabs: const [
+          bottom: const TabBar(
+            tabs: [
               Tab(
                 text: 'Products',
               ),
@@ -91,6 +81,7 @@ class HomeView extends StatelessWidget {
                 ),
               ],
             ),
+            const Divider(),
           ],
         ),
       ),

@@ -18,6 +18,9 @@ class RequestTabView extends StatelessWidget {
         if (!snapShot.hasData) {
           return const Center(child: CircularProgressIndicator(color: Colors.black,));
         } else {
+          if(snapShot.data!.docs.isEmpty){
+            return const Center(child: Text('No Products Available'));
+          }
           return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView.builder(
