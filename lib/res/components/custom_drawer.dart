@@ -1,4 +1,5 @@
 import 'package:e_store/provider/themeChangerProvider.dart';
+import 'package:e_store/shared_preference/dark_theme_data.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,8 @@ class CustomDrawer extends StatelessWidget {
                   inactiveTrackColor: Theme.of(context).canvasColor,
                   activeColor: Theme.of(context).iconTheme.color,
                   onChanged: (value){
-                    themeChangerProvider.setIsDarkTheme(!themeChangerProvider.isDarkTheme);
-                    themeChangerProvider.setThemeMode(themeChangerProvider.isDarkTheme ? ThemeMode.dark : ThemeMode.light);
+                    themeChangerProvider.setIsDarkTheme(value);
+                    DarkThemeData.setThemePreference(value);
                   });
     }
           ),

@@ -6,12 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/imageProvider.dart';
 
-class ProductSellingFormView extends StatelessWidget {
-  ProductSellingFormView({Key? key}) : super(key: key);
+class ProductSellingFormView extends StatefulWidget {
+  const ProductSellingFormView({Key? key}) : super(key: key);
 
+  @override
+  State<ProductSellingFormView> createState() => _ProductSellingFormViewState();
+}
+
+class _ProductSellingFormViewState extends State<ProductSellingFormView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _titleController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

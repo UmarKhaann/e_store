@@ -5,14 +5,30 @@ import 'package:e_store/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import '../../res/components/custom_button.dart';
 
-class SignUpView extends StatelessWidget {
-  SignUpView({Key? key}) : super(key: key);
+class SignUpView extends StatefulWidget {
+  const SignUpView({Key? key}) : super(key: key);
 
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _usernameController.dispose();
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

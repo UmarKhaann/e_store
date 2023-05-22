@@ -5,10 +5,24 @@ import '../../res/components/custom_button.dart';
 import '../../res/components/custom_input_field.dart';
 import '../../res/components/stack_background_design.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   LoginView({Key? key}) : super(key: key);
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

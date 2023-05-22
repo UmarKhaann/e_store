@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_store/res/components/custom_button.dart';
+import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/product_detail_model.dart';
 import 'package:flutter/material.dart';
 
@@ -91,25 +92,25 @@ class ProductDetailsView extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: CustomButton(
-                                width: 120,
-                                text: 'SMS',
-                                onPressed: () async {
-                                  ProductDetailModel.launchTextMessage(
-                                      phone: docs['phone']);
-                                }),
-                          ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(3),
-                            child: CustomButton(
-                                width: 120,
-                                text: 'CALL',
-                                onPressed: () {
-                                  ProductDetailModel.launchCall(phone: docs['phone']);
-                                }),
-                          ),
+                          CustomButton(
+                              width: 120,
+                              text: 'SMS',
+                              onPressed: () async {
+                                ProductDetailModel.launchTextMessage(
+                                    phone: docs['phone']);
+                              }),
+                          CustomButton(
+                              width: 120,
+                              text: 'CALL',
+                              onPressed: () {
+                                ProductDetailModel.launchCall(phone: docs['phone']);
+                              }),
+                          CustomButton(
+                              width: 120,
+                              text: 'CHAT',
+                              onPressed: () {
+                                Navigator.pushNamed(context, RoutesName.chatView);
+                              }),
                         ],
                       ),
                     ],

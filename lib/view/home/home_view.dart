@@ -24,7 +24,7 @@ class HomeView extends StatelessWidget {
           title: const Text("E-Store"),
           actions: [
             IconButton(onPressed: (){
-              Navigator.pushNamed(context, RoutesName.chatView);
+              Navigator.pushNamed(context, RoutesName.conversationsView);
             }, icon: const Icon(Icons.chat)),
             const SizedBox(
               width: 10,

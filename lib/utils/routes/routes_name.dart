@@ -5,5 +5,6 @@ class RoutesName{
   static const String productSellingFormView = 'product_selling_form_view';
   static const String requestProductFormView = 'request_product_Form_View';
   static const String productDetailView = 'product_detail_view';
+  static const String conversationsView = 'conversations_view';
   static const String chatView = 'chat_view';
 }
