@@ -36,7 +36,7 @@ class Routes {
         return MaterialPageRoute(builder: (_) => ConversationsView());
 
       case RoutesName.chatView:
-        return MaterialPageRoute(builder: (_) => ChatView());
+        return MaterialPageRoute(builder: (_) => ChatView(productDocs: settings.arguments));
 
       default:
         return MaterialPageRoute(builder: (_) {

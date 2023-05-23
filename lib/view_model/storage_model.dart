@@ -31,6 +31,7 @@ class StorageModel{
       String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
       String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
       await newUser.set({
+        'productId' : DateTime.now().microsecondsSinceEpoch.toString(),
         'uid': userId,
         'name' : name['fullName'].toString(),
         'imageUrl' : imageUrl.toString(),
