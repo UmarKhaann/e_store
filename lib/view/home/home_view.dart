@@ -13,8 +13,8 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final sellingProducts = fireStore.collection('ProductsForSale').snapshots();
-    final productsRequest = fireStore.collection('productsRequest').snapshots();
+    final sellingProducts = fireStore.collection('products').where('isSellingProduct', isEqualTo: true).snapshots();
+    final productsRequest = fireStore.collection('products').where('isSellingProduct', isEqualTo: false).snapshots();
 
     return DefaultTabController(
       length: 2,

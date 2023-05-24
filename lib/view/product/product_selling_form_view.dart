@@ -112,7 +112,7 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
                           title: _titleController.text,
                           price: _priceController.text,
                           description: _descriptionController.text,
-                        uploadType: 'ProductsForSale'
+                          isSellingProduct: true
                       );
                     }),
                 const Divider(),

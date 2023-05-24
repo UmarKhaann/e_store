@@ -14,15 +14,11 @@ class ChatModel{
     String customFormattedDateTime =
     formattedDateTime.replaceAll(',', ' at');
 
-    final doc = _firestore.collection('conversations').doc(_auth.currentUser!.uid +productDocs['productId']);
+    final id = (_auth.currentUser!.uid+productDocs['productId']+productDocs['uid']).split('')..sort()..join();
+    final doc = _firestore.collection('conversations').doc(id.toString());
     doc.get().then((value){
       if(value.exists){
         doc.update({
-          "members": [
-            _auth.currentUser!.uid,
-            productDocs['uid']
-          ],
-          "productId": productDocs['productId'],
           "messages": FieldValue.arrayUnion([
             {
               "sender": _auth.currentUser!.uid,
@@ -37,6 +33,10 @@ class ChatModel{
             _auth.currentUser!.uid,
             productDocs['uid']
           ],
+          "productId": productDocs['productId'],
+          "productName": productDocs['title'],
+          "imageUrl": productDocs['imageUrl'],
+          'userName': productDocs['name'],
           "messages": [
             {
               "sender": _auth.currentUser!.uid,

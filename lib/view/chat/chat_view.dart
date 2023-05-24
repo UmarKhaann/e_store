@@ -29,7 +29,8 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     // TODO: implement initState
-    stream = FirebaseFirestore.instance.collection('conversations').doc(_auth.currentUser!.uid +widget.productDocs['productId']).snapshots();
+    final id = (_auth.currentUser!.uid+widget.productDocs['productId']+widget.productDocs['uid']).split('')..sort()..join();
+    stream = FirebaseFirestore.instance.collection('conversations').doc(id.toString()).snapshots();
     super.initState();
   }
 
@@ -48,17 +49,21 @@ class _ChatViewState extends State<ChatView> {
             StreamBuilder(
               stream: stream,
                 builder: (context, AsyncSnapshot snapshot){
-                if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting){
+                if (!snapshot.hasData){
                   return const Center(child: CircularProgressIndicator());
                 }else{
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data.data()['messages'].length,
-                        itemBuilder: (context, index){
-                        return Text(snapshot.data.data()['messages'][index]['message'] ?? "there isn't any data",
-                          textAlign: snapshot.data.data()['messages'][index]['sender'] == _auth.currentUser!.uid ? TextAlign.right : TextAlign.left);
-                        }),
-                  );
+                  if(snapshot.data.data() == null){
+                    return const Center(child: Text("there isn't any data"));
+                  }else{
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: snapshot.data.data()['messages'].length,
+                          itemBuilder: (context, index){
+                            return Text(snapshot.data.data()['messages'][index]['message'] ?? "there isn't any data",
+                                textAlign: snapshot.data.data()['messages'][index]['sender'] == _auth.currentUser!.uid ? TextAlign.right : TextAlign.left);
+                          }),
+                    );
+                  }
                 }
                 }),
             Row(

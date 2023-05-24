@@ -2,12 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/product_detail_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailsView extends StatelessWidget {
   final dynamic docs;
 
-  const ProductDetailsView({required this.docs, Key? key}) : super(key: key);
+  ProductDetailsView({required this.docs, Key? key}) : super(key: key);
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,8 @@ class ProductDetailsView extends StatelessWidget {
                           Text(docs['description'], style: const TextStyle(color: Colors.grey),),
                         ],
                       ),
-                      Row(
+                      if(docs['uid'] != _auth.currentUser!.uid)
+                        Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomButton(

@@ -15,7 +15,7 @@ class StorageModel{
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
-  static void uploadProductToFirebase({required context,required title,required price,required description, required uploadType})async{
+  static void uploadProductToFirebase({required context,required title,required price,required description, required isSellingProduct})async{
     final provider = Provider.of<ImageProviderFromGallery>(context, listen: false);
     final userId = _auth.currentUser!.uid.toString();
 
@@ -24,17 +24,19 @@ class StorageModel{
     Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName');
     UploadTask uploadTask = storageReference.putFile(File(provider.image.path));
     await uploadTask.whenComplete(() async{
-      final newUser = _fireStore.collection(uploadType).doc(DateTime.now().microsecondsSinceEpoch.toString());
+      final dateTime = DateTime.now().microsecondsSinceEpoch.toString();
+      final newUser = _fireStore.collection('products').doc(dateTime);
       final name = await _fireStore.collection('users').doc(userId).get();
       final imageUrl = await storageReference.getDownloadURL();
       DateTime now = DateTime.now();
       String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
       String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
       await newUser.set({
-        'productId' : DateTime.now().microsecondsSinceEpoch.toString(),
+        'productId' : dateTime,
         'uid': userId,
         'name' : name['fullName'].toString(),
         'imageUrl' : imageUrl.toString(),
+        'isSellingProduct' : isSellingProduct,
         'title' : title,
         'price' : price,
         'description' : description,
