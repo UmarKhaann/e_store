@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 class CustomTheme {
   static ThemeData get lightTheme {
     return ThemeData(
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: Colors.black,
+          circularTrackColor: Colors.grey[300]),
       brightness: Brightness.light,
       useMaterial3: true,
       scaffoldBackgroundColor: Colors.grey[300],
@@ -31,6 +34,7 @@ class CustomTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: Colors.white),
       brightness: Brightness.dark,
       useMaterial3: true,
       scaffoldBackgroundColor: Colors.black,

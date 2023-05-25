@@ -28,6 +28,7 @@ class _ConversationsViewState extends State<ConversationsView> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       drawer: const CustomDrawer(),
       appBar: AppBar(
@@ -39,7 +40,9 @@ class _ConversationsViewState extends State<ConversationsView> {
               stream: snapShot.snapshots(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                  return SizedBox(
+                      height: height * .5,
+                      child: const Center(child: CircularProgressIndicator()));
                 } else {
                   if(snapshot.data.docs.isEmpty){
                     return const Center(child: Text("there isn't any data"));

@@ -29,7 +29,6 @@ class CustomCard extends StatelessWidget {
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                         child: CircularProgressIndicator(
-                          color: Colors.black,
                             value: downloadProgress.progress)),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

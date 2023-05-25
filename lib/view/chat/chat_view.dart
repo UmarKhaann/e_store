@@ -3,6 +3,7 @@ import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/view_model/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../res/components/custom_drawer.dart';
 
 class ChatView extends StatefulWidget {
@@ -29,13 +30,22 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     // TODO: implement initState
-    final id = (_auth.currentUser!.uid+widget.productDocs['productId']+widget.productDocs['uid']).split('')..sort()..join();
-    stream = FirebaseFirestore.instance.collection('conversations').doc(id.toString()).snapshots();
+    final id = (_auth.currentUser!.uid +
+            widget.productDocs['productId'] +
+            widget.productDocs['uid'])
+        .split('')
+      ..sort()
+      ..join();
+    stream = FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(id.toString())
+        .snapshots();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       drawer: const CustomDrawer(),
       appBar: AppBar(
@@ -46,25 +56,59 @@ class _ChatViewState extends State<ChatView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            StreamBuilder(
-              stream: stream,
-                builder: (context, AsyncSnapshot snapshot){
-                if (!snapshot.hasData){
-                  return const Center(child: CircularProgressIndicator());
-                }else{
-                  if(snapshot.data.data() == null){
-                    return const Center(child: Text("there isn't any data"));
-                  }else{
-                    return Expanded(
-                      child: ListView.builder(
-                          itemCount: snapshot.data.data()['messages'].length,
-                          itemBuilder: (context, index){
-                            return Text(snapshot.data.data()['messages'][index]['message'] ?? "there isn't any data",
-                                textAlign: snapshot.data.data()['messages'][index]['sender'] == _auth.currentUser!.uid ? TextAlign.right : TextAlign.left);
-                          }),
-                    );
+            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: stream,
+                builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                  if (!snapshot.hasData) {
+                    return SizedBox(
+                      height: height * 0.5,
+                        child: const Center(child: CircularProgressIndicator()));
+                  } else {
+                    final data = snapshot.data?.data();
+                    if (data == null) {
+                      return const Center(child: Text("there isn't any data"));
+                    } else {
+                      return Expanded(
+                        child: ListView.builder(
+                            itemCount: data['messages'].length,
+                            itemBuilder: (context, index) {
+                              final messages = data['messages'][index];
+                              final meCurrUser = messages['sender'] ==
+                                  _auth.currentUser!.uid;
+
+                              String storedTime = messages['time'];
+                              DateTime parsedTime = DateFormat.MMMd().add_jm().parse(storedTime);
+                              String formattedTime = DateFormat.jm().format(parsedTime);
+
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: meCurrUser ? 5.0 : 2.0),
+                                child: Align(
+                                  alignment: meCurrUser ? Alignment.topRight : Alignment.topLeft,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: meCurrUser ? Colors.blue : Theme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            '${messages['message']}   ',
+                                          ),
+                                        ),
+                                        Text(formattedTime, style: const TextStyle(fontSize: 10),)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      );
+                    }
                   }
-                }
                 }),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +119,9 @@ class _ChatViewState extends State<ChatView> {
                 ),
                 IconButton(
                     onPressed: () {
-                      ChatModel.sentChatMessage(message: _chatController.text, productDocs: widget.productDocs);
+                      ChatModel.sentChatMessage(
+                          message: _chatController.text,
+                          productDocs: widget.productDocs);
                       _chatController.clear();
                     },
                     icon: const Icon(Icons.send)),

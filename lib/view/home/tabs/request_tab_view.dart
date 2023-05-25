@@ -74,7 +74,6 @@ class RequestTabView extends StatelessWidget {
                                       (context, url, downloadProgress) =>
                                           Center(
                                             child: CircularProgressIndicator(
-                                              color: Colors.black,
                                                 value: downloadProgress.progress),
                                           ),
                                   errorWidget: (context, url, error) =>

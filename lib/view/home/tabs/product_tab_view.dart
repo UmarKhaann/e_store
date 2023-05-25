@@ -14,7 +14,7 @@ class ProductTabView extends StatelessWidget {
       stream: sellingProducts,
       builder: (context, snapShot) {
         if (!snapShot.hasData) {
-          return const Center(child: CircularProgressIndicator(color: Colors.black,));
+          return const Center(child: CircularProgressIndicator());
         } else {
           if(snapShot.data!.docs.isEmpty){
             return const Center(child: Text('No Products Available'));
