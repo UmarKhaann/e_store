@@ -30,7 +30,7 @@ class _ConversationsViewState extends State<ConversationsView> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: const Text("Chats"),
       ),

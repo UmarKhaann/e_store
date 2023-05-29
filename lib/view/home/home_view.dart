@@ -19,7 +19,7 @@ class HomeView extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        drawer: const CustomDrawer(),
+        drawer: CustomDrawer(),
         appBar: AppBar(
           title: const Text("E-Store"),
           actions: [

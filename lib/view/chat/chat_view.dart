@@ -47,7 +47,7 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text(widget.productDocs['title']),
       ),
