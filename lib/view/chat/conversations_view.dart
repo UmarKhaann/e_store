@@ -53,12 +53,13 @@ class _ConversationsViewState extends State<ConversationsView> {
                     child: ListView.builder(
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) {
+                          final reversedIndex = (snapshot.data.docs.length - 1) - index;
                           return InkWell(
                             onTap: () {
                               final Map map = {
-                                'uid': _auth.currentUser!.uid == snapshot.data.docs[index]['members'][1] ? snapshot.data.docs[index]['members'][0] : snapshot.data.docs[index]['members'][1] ,
-                                'productId': snapshot.data.docs[index]['productId'],
-                                'title': snapshot.data.docs[index]['productName']
+                                'uid': _auth.currentUser!.uid == snapshot.data.docs[reversedIndex]['members'][1] ? snapshot.data.docs[reversedIndex]['members'][0] : snapshot.data.docs[reversedIndex]['members'][1] ,
+                                'productId': snapshot.data.docs[reversedIndex]['productId'],
+                                'title': snapshot.data.docs[reversedIndex]['productName']
                               };
                               Navigator.pushNamed(context, RoutesName.chatView,
                                   arguments: map);
@@ -72,7 +73,7 @@ class _ConversationsViewState extends State<ConversationsView> {
                                       backgroundColor: Colors.transparent,
                                       backgroundImage:
                                           CachedNetworkImageProvider(
-                                        snapshot.data.docs[index]['imageUrl'],
+                                        snapshot.data.docs[reversedIndex]['imageUrl'],
                                       ),
                                     ),
                                     const SizedBox(
@@ -83,13 +84,13 @@ class _ConversationsViewState extends State<ConversationsView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          snapshot.data.docs[index]['userName'],
+                                          snapshot.data.docs[reversedIndex]['userName'],
                                           style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Text(
-                                            snapshot.data.docs[index]
+                                            snapshot.data.docs[reversedIndex]
                                                 ['productName'],
                                             style: const TextStyle(
                                                 fontSize: 16,

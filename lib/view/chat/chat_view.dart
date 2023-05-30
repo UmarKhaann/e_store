@@ -30,6 +30,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     // TODO: implement initState
+
     final id = (_auth.currentUser!.uid +
             widget.productDocs['productId'] +
             widget.productDocs['uid'])
@@ -45,67 +46,96 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController(
+        initialScrollOffset: MediaQuery.of(context).size.height * 1);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       drawer: CustomDrawer(),
-      appBar: AppBar(
-        title: Text(widget.productDocs['title']),
-      ),
+      appBar: AppBar(title: Text(widget.productDocs['title'])),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                 stream: stream,
-                builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                builder: (context,
+                    AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                        snapshot) {
                   if (!snapshot.hasData) {
                     return SizedBox(
-                      height: height * 0.5,
-                        child: const Center(child: CircularProgressIndicator()));
+                        height: height * 0.5,
+                        child:
+                            const Center(child: CircularProgressIndicator()));
                   } else {
                     final data = snapshot.data?.data();
                     if (data == null) {
                       return const Center(child: Text("there isn't any data"));
                     } else {
                       return Expanded(
-                        child: ListView.builder(
-                            itemCount: data['messages'].length,
-                            itemBuilder: (context, index) {
-                              final messages = data['messages'][index];
-                              final meCurrUser = messages['sender'] ==
-                                  _auth.currentUser!.uid;
+                        child: CustomScrollView(
+                          controller: scrollController,
+                          slivers: [
+                            SliverList(
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                                final messages = data['messages'][index];
+                                final meCurrUser = messages['sender'] ==
+                                    _auth.currentUser!.uid;
 
-                              String storedTime = messages['time'];
-                              DateTime parsedTime = DateFormat.MMMd().add_jm().parse(storedTime);
-                              String formattedTime = DateFormat.jm().format(parsedTime);
+                                String storedTime = messages['time'];
+                                DateTime parsedTime = DateFormat.MMMd()
+                                    .add_jm()
+                                    .parse(storedTime);
+                                String formattedTime =
+                                    DateFormat.jm().format(parsedTime);
 
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: meCurrUser ? 5.0 : 2.0),
-                                child: Align(
-                                  alignment: meCurrUser ? Alignment.topRight : Alignment.topLeft,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: meCurrUser ? Colors.blue : Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(5)
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            '${messages['message']}   ',
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  child: Align(
+                                    alignment: meCurrUser
+                                        ? Alignment.topRight
+                                        : Alignment.topLeft,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: meCurrUser
+                                              ? Colors.blue
+                                              : Theme.of(context).cardColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft:
+                                                  const Radius.circular(15),
+                                              topRight:
+                                                  const Radius.circular(15),
+                                              bottomLeft: Radius.circular(
+                                                  meCurrUser ? 15 : 0),
+                                              bottomRight: Radius.circular(
+                                                  meCurrUser ? 0 : 15))),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              '${messages['message']}',
+                                            ),
                                           ),
-                                        ),
-                                        Text(formattedTime, style: const TextStyle(fontSize: 10),)
-                                      ],
+                                          const SizedBox(width: 10,),
+                                          Text(
+                                            formattedTime,
+                                            style:
+                                                const TextStyle(fontSize: 10),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }, childCount: data['messages'].length),
+                            ),
+                          ],
+                        ),
                       );
                     }
                   }
@@ -115,10 +145,15 @@ class _ChatViewState extends State<ChatView> {
               children: [
                 Expanded(
                   child: CustomInputField(
+                    circularBorderRadius: 30,
                       hintText: "Type a message", controller: _chatController),
                 ),
                 IconButton(
                     onPressed: () {
+                      scrollController.animateTo(
+                          scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInCirc);
                       ChatModel.sentChatMessage(
                           message: _chatController.text,
                           productDocs: widget.productDocs);

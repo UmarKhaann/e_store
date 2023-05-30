@@ -54,22 +54,38 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Home'),
+            title: const Row(
+              children: [
+                Icon(Icons.home_outlined),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Home'),
+              ],
+            ),
             onTap: () {
               Navigator.pushReplacementNamed(context, RoutesName.homeView);
-            },
-          ),
-          ListTile(
-            title: const Text('Log Out'),
-            onTap: () {
-              showDialog(
-                  context: context, builder: (_) => const CustomAlertBox());
             },
           ),
           Consumer<ThemeChangerProvider>(
               builder: (context, themeChangerProvider, child) {
             return SwitchListTile(
-                title: const Text('Dark Mode'),
+                thumbIcon: MaterialStateProperty.all(Icon(
+                    themeChangerProvider.isDarkTheme
+                        ? Icons.dark_mode
+                        : Icons.light_mode)),
+                thumbColor: MaterialStateProperty.all(Theme.of(context).canvasColor),
+                title: Row(
+                  children: [
+                    Icon(themeChangerProvider.isDarkTheme
+                        ? Icons.dark_mode
+                        : Icons.light_mode),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text('Dark Mode'),
+                  ],
+                ),
                 value: (themeChangerProvider.isDarkTheme),
                 inactiveThumbColor: Theme.of(context).scaffoldBackgroundColor,
                 inactiveTrackColor: Theme.of(context).canvasColor,
@@ -79,6 +95,21 @@ class CustomDrawer extends StatelessWidget {
                   DarkThemeData.setThemePreference(value);
                 });
           }),
+          ListTile(
+            title: const Row(
+              children: [
+                Icon(Icons.info_outline),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Log Out'),
+              ],
+            ),
+            onTap: () {
+              showDialog(
+                  context: context, builder: (_) => const CustomAlertBox());
+            },
+          ),
         ],
       ),
     );
