@@ -23,7 +23,7 @@ class CustomButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.background,
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         width: width,
         height: height,
         child: isLoading

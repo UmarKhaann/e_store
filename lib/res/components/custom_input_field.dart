@@ -8,10 +8,12 @@ class CustomInputField extends StatefulWidget {
   final TextInputType keyboardInputType;
   final int maxLines;
   final double circularBorderRadius;
+  final void Function(String)? onChanged;
 
   const CustomInputField(
       {required this.hintText,
       this.icon,
+        this.onChanged,
       this.isPasswordField = false,
         this.circularBorderRadius = 5,
       required this.controller,
@@ -44,6 +46,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.circularBorderRadius),
             child: TextFormField(
+              onChanged: widget.onChanged,
               maxLines: widget.maxLines,
               controller: widget.controller,
               textInputAction: TextInputAction.next,

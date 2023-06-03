@@ -19,6 +19,7 @@ class _ChatViewState extends State<ChatView> {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _chatController = TextEditingController();
   late Stream<DocumentSnapshot<Map<String, dynamic>>> stream;
+  final ValueNotifier<bool> _isTyping = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
@@ -70,7 +71,7 @@ class _ChatViewState extends State<ChatView> {
                   } else {
                     final data = snapshot.data?.data();
                     if (data == null) {
-                      return const Center(child: Text("there isn't any data"));
+                      return const Expanded(child: Center(child: Text("there isn't any data")));
                     } else {
                       return Expanded(
                         child: CustomScrollView(
@@ -145,21 +146,42 @@ class _ChatViewState extends State<ChatView> {
               children: [
                 Expanded(
                   child: CustomInputField(
+                    onChanged: (value){
+                      if(value.isNotEmpty){
+                        _isTyping.value = true;
+                      }else{
+                        _isTyping.value = false;
+                      }
+                    },
                     circularBorderRadius: 30,
                       hintText: "Type a message", controller: _chatController),
                 ),
-                IconButton(
-                    onPressed: () {
-                      scrollController.animateTo(
-                          scrollController.position.maxScrollExtent,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInCirc);
-                      ChatModel.sentChatMessage(
-                          message: _chatController.text,
-                          productDocs: widget.productDocs);
-                      _chatController.clear();
-                    },
-                    icon: const Icon(Icons.send)),
+                const SizedBox(width: 10,),
+                ValueListenableBuilder(
+                  valueListenable: _isTyping,
+                  builder: (context, snapshot, child){
+                    return CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.blue,
+                      child: Center(
+                        child: IconButton(
+                          onPressed: (){
+                            ChatModel.sentChatMessage(
+                                message: _chatController.text,
+                                productDocs: widget.productDocs);
+                            _chatController.clear();
+                            scrollController.animateTo(
+                                scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInCirc);
+                          },
+                          icon: snapshot ? const Icon(Icons.send) : const Icon(Icons.mic),
+
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ],

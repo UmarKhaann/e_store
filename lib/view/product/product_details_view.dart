@@ -32,7 +32,7 @@ class ProductDetailsView extends StatelessWidget {
         children: [
           CachedNetworkImage(
             width: double.infinity,
-            height: height * .40,
+            height: height * .45,
             fit: BoxFit.cover,
             imageUrl: docs['imageUrl'].toString(),
             progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -41,85 +41,98 @@ class ProductDetailsView extends StatelessWidget {
                         value: downloadProgress.progress)),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
-          Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: height * .35,
-              ),
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(50),
-                  topLeft: Radius.circular(50)
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: height * .40,
                 ),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  color: Theme.of(context).cardColor,
-                  height: height * .65,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(50),
+                      topLeft: Radius.circular(50)),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    color: Theme.of(context).cardColor,
+                    height: height * .60,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Rs ${docs['price']}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 22),
+                            ),
+                            Text(
+                              docs['time'],
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          docs['title'],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          'Description',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        SizedBox(
+                          height: height * .35,
+                          child: ListView(
+                            padding: EdgeInsets.zero,
                             children: [
                               Text(
-                                'Rs ${docs['price']}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 22),
-                              ),
-                              Text(
-                                docs['time'],
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                docs['description'],
+                                style: const TextStyle(color: Colors.grey),
                               ),
                             ],
                           ),
-                          Text(
-                            docs['title'],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(child: Container()),
+                        if (docs['uid'] != _auth.currentUser!.uid)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CustomButton(
+                                  width: 110,
+                                  text: 'SMS',
+                                  onPressed: () async {
+                                    ProductDetailModel.launchTextMessage(
+                                        phone: docs['phone']);
+                                  }),
+                              CustomButton(
+                                  width: 110,
+                                  text: 'CALL',
+                                  onPressed: () {
+                                    ProductDetailModel.launchCall(
+                                        phone: docs['phone']);
+                                  }),
+                              CustomButton(
+                                  width: 110,
+                                  text: 'CHAT',
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, RoutesName.chatView,
+                                        arguments: docs);
+                                  }),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text(
-                            'Description',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          Text(docs['description'], style: const TextStyle(color: Colors.grey),),
-                        ],
-                      ),
-                      if(docs['uid'] != _auth.currentUser!.uid)
-                        Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CustomButton(
-                              width: 120,
-                              text: 'SMS',
-                              onPressed: () async {
-                                ProductDetailModel.launchTextMessage(
-                                    phone: docs['phone']);
-                              }),
-                          CustomButton(
-                              width: 120,
-                              text: 'CALL',
-                              onPressed: () {
-                                ProductDetailModel.launchCall(phone: docs['phone']);
-                              }),
-                          CustomButton(
-                              width: 120,
-                              text: 'CHAT',
-                              onPressed: () {
-                                Navigator.pushNamed(context, RoutesName.chatView, arguments: docs);
-                              }),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),

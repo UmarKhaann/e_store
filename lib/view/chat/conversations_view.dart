@@ -45,7 +45,7 @@ class _ConversationsViewState extends State<ConversationsView> {
                       child: const Center(child: CircularProgressIndicator()));
                 } else {
                   if(snapshot.data.docs.isEmpty){
-                    return const Center(child: Text("there isn't any data"));
+                    return const Expanded(child: Center(child: Text("there aren't any conversations")));
                   }
                   return Expanded(
                       child: Padding(

@@ -47,18 +47,17 @@ class CustomCard extends StatelessWidget {
                         'Name: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(docs['title'].toString()),
+                      Expanded(child: Text(docs['title'].toString(), overflow: TextOverflow.ellipsis)),
                     ],
                   ),
-                  // Text(docs['title'].toString()),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Text(
-                        'Price: ',
+                        'Rs: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text('Rs ${docs['price'].toString()}'),
+                      Text(docs['price'].toString()),
                     ],
                   ),
                 ],

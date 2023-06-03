@@ -6,7 +6,7 @@ import '../../res/components/custom_input_field.dart';
 import '../../res/components/stack_background_design.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
