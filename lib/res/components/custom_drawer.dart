@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/provider/themeChangerProvider.dart';
 import 'package:e_store/shared_preference/dark_theme_data.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
+import 'package:e_store/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,7 +108,18 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               showDialog(
-                  context: context, builder: (_) => const CustomAlertBox());
+                  context: context, builder: (_) => CustomAlertBox(
+                title: 'Log Out',
+                content: 'Are you sure you want to log out?',
+                yesOnPressed: () async {
+                  await _auth.signOut();
+                  Navigator.pushReplacementNamed(context, RoutesName.loginView);
+                  Utils.flushBarMessage(context, 'Logged Out Successfully');
+                },
+                noOnPressed: () {
+                  Navigator.pop(context);
+                },
+              ));
             },
           ),
         ],

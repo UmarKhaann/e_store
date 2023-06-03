@@ -55,7 +55,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                   contentPadding: widget.icon == null
-                      ? const EdgeInsets.symmetric(horizontal: 12, vertical: 5)
+                      ? const EdgeInsets.symmetric(horizontal: 15, vertical: 5)
                       : null,
                   prefixIcon:
                       widget.icon == null ? null : Icon(widget.icon),

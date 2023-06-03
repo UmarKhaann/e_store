@@ -40,9 +40,11 @@ dependencies:
   firebase_storage: ^11.2.0
   flutter:
     sdk: flutter
+  flutter_sound: ^9.2.13
   fluttertoast: ^8.2.1
   image_picker: ^0.8.7+5
   intl: ^0.18.1
+  permission_handler: ^10.2.0
   provider: ^6.0.5
   shared_preferences: ^2.1.1
   toast: ^0.3.0

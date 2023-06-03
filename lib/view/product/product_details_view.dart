@@ -53,7 +53,7 @@ class ProductDetailsView extends StatelessWidget {
                       topRight: Radius.circular(50),
                       topLeft: Radius.circular(50)),
                   child: Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(25),
                     color: Theme.of(context).cardColor,
                     height: height * .60,
                     child: Column(
