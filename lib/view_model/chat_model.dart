@@ -66,7 +66,7 @@ class ChatModel {
   }
 
   static sentChatMessage(
-      {required String message, required dynamic productDocs}) {
+      {required bool isVoiceMessage, required String message, required dynamic productDocs}) {
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
     String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
@@ -84,7 +84,7 @@ class ChatModel {
           "messages": FieldValue.arrayUnion([
             {
               "sender": _auth.currentUser!.uid,
-              "message": message,
+              isVoiceMessage ? "voiceMessage" : "message": message,
               "time": customFormattedDateTime,
             }
           ]),
@@ -99,7 +99,7 @@ class ChatModel {
           "messages": [
             {
               "sender": _auth.currentUser!.uid,
-              "message": message,
+              isVoiceMessage ? "voiceMessage" : "message": message,
               "time": customFormattedDateTime,
             }
           ],

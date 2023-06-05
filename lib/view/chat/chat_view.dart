@@ -87,49 +87,51 @@ class _ChatViewState extends State<ChatView> {
                                 String formattedTime =
                                 DateFormat.jm().format(parsedTime);
 
-                                return Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(vertical: 4),
-                                  child: Align(
-                                    alignment: meCurrUser
-                                        ? Alignment.topRight
-                                        : Alignment.topLeft,
-                                    child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: meCurrUser
-                                                ? Colors.blue
-                                                : Theme
-                                                .of(context)
-                                                .cardColor,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft:
-                                                const Radius.circular(15),
-                                                topRight:
-                                                const Radius.circular(15),
-                                                bottomLeft: Radius.circular(
-                                                    meCurrUser ? 15 : 0),
-                                                bottomRight: Radius.circular(
-                                                    meCurrUser ? 0 : 15))),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                  '${messages['message']}'),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              formattedTime,
-                                              style:
-                                              const TextStyle(fontSize: 10),
-                                            )
-                                          ],
-                                        )),
-                                  ),
-                                );
+                                if(messages['message'] != null) {
+                                  return Padding(
+                                    padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
+                                    child: Align(
+                                      alignment: meCurrUser
+                                          ? Alignment.topRight
+                                          : Alignment.topLeft,
+                                      child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: meCurrUser
+                                                  ? Colors.blue
+                                                  : Theme
+                                                  .of(context)
+                                                  .cardColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                  const Radius.circular(15),
+                                                  topRight:
+                                                  const Radius.circular(15),
+                                                  bottomLeft: Radius.circular(
+                                                      meCurrUser ? 15 : 0),
+                                                  bottomRight: Radius.circular(
+                                                      meCurrUser ? 0 : 15))),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                            children: [
+                                                Flexible(
+                                                  child: Text(
+                                                      '${messages['message']}'),
+                                                ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                formattedTime,
+                                                style:
+                                                const TextStyle(fontSize: 10),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  );
+                                }
                               }, childCount: data['messages'].length),
                             ),
                           ],

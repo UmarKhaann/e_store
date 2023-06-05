@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCmLx9gtUPxYFWlU-ajfVv8AproFogkAag',
+    appId: '1:592110491539:web:efdb9b192676e40ccdba66',
+    messagingSenderId: '592110491539',
+    projectId: 'e-store-4ab54',
+    authDomain: 'e-store-4ab54.firebaseapp.com',
+    storageBucket: 'e-store-4ab54.appspot.com',
+    measurementId: 'G-491QM9PHWE',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD6C8laIjaBaoHqpq4DYD72Xi0dtmrllbQ',
     appId: '1:592110491539:android:28212aa13bc38a00cdba66',
@@ -65,5 +69,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'e-store-4ab54.appspot.com',
     iosClientId: '592110491539-1qjlvq3kn375effqidt69rm28i8kg723.apps.googleusercontent.com',
     iosBundleId: 'com.example.eStore',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDgIksWb7KDk3qHSz6bacJ8sMH76uAPA-A',
+    appId: '1:592110491539:ios:837d49bfee00e55ccdba66',
+    messagingSenderId: '592110491539',
+    projectId: 'e-store-4ab54',
+    storageBucket: 'e-store-4ab54.appspot.com',
+    iosClientId: '592110491539-od57vncjff3h1c7h161qh452t6o19keo.apps.googleusercontent.com',
+    iosBundleId: 'com.example.eStore.RunnerTests',
   );
 }

@@ -7,13 +7,16 @@ import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyD6C8laIjaBaoHqpq4DYD72Xi0dtmrllbQ',
+        appId: '1:592110491539:web:efdb9b192676e40ccdba66',
+        messagingSenderId: '592110491539',
+        projectId: 'e-store-4ab54'),
   );
   runApp(MyApp());
 }

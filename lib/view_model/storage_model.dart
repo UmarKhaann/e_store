@@ -25,13 +25,13 @@ class StorageModel{
     UploadTask uploadTask = storageReference.putFile(File(provider.image.path));
     await uploadTask.whenComplete(() async{
       final dateTime = DateTime.now().microsecondsSinceEpoch.toString();
-      final newUser = _fireStore.collection('products').doc(dateTime);
+      final newItem = _fireStore.collection('products').doc(dateTime);
       final name = await _fireStore.collection('users').doc(userId).get();
       final imageUrl = await storageReference.getDownloadURL();
       DateTime now = DateTime.now();
       String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
       String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
-      await newUser.set({
+      await newItem.set({
         'productId' : dateTime,
         'uid': userId,
         'name' : name['fullName'].toString(),
