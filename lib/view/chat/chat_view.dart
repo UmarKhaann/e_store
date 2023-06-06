@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/res/components/custom_message_widget.dart';
 import 'package:e_store/res/components/sending_message_widget.dart';
+import 'package:e_store/view_model/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../res/components/custom_drawer.dart';
 
 class ChatView extends StatefulWidget {
@@ -22,8 +23,8 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     final id = (_auth.currentUser!.uid +
-        widget.productDocs['productId'] +
-        widget.productDocs['uid'])
+            widget.productDocs['productId'] +
+            widget.productDocs['uid'])
         .split('')
       ..sort()
       ..join();
@@ -31,20 +32,22 @@ class _ChatViewState extends State<ChatView> {
         .collection('conversations')
         .doc(id.toString())
         .snapshots();
+    ChatModel.player.openPlayer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    ChatModel.player.closePlayer();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController(
-        initialScrollOffset: MediaQuery
-            .of(context)
-            .size
-            .height * 1);
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height * 1;
+        initialScrollOffset: MediaQuery.of(context).size.height * 1);
+    final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       drawer: CustomDrawer(),
       appBar: AppBar(title: Text(widget.productDocs['title'])),
@@ -57,12 +60,12 @@ class _ChatViewState extends State<ChatView> {
                 stream: stream,
                 builder: (context,
                     AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                    snapshot) {
+                        snapshot) {
                   if (!snapshot.hasData) {
                     return SizedBox(
                         height: height * 0.5,
                         child:
-                        const Center(child: CircularProgressIndicator()));
+                            const Center(child: CircularProgressIndicator()));
                   } else {
                     final data = snapshot.data?.data();
                     if (data == null) {
@@ -75,63 +78,12 @@ class _ChatViewState extends State<ChatView> {
                           slivers: [
                             SliverList(
                               delegate:
-                              SliverChildBuilderDelegate((context, index) {
+                                  SliverChildBuilderDelegate((context, index) {
                                 final messages = data['messages'][index];
                                 final meCurrUser = messages['sender'] ==
                                     _auth.currentUser!.uid;
-
-                                String storedTime = messages['time'];
-                                DateTime parsedTime = DateFormat.MMMd()
-                                    .add_jm()
-                                    .parse(storedTime);
-                                String formattedTime =
-                                DateFormat.jm().format(parsedTime);
-
-                                if(messages['message'] != null) {
-                                  return Padding(
-                                    padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                    child: Align(
-                                      alignment: meCurrUser
-                                          ? Alignment.topRight
-                                          : Alignment.topLeft,
-                                      child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              color: meCurrUser
-                                                  ? Colors.blue
-                                                  : Theme
-                                                  .of(context)
-                                                  .cardColor,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                  const Radius.circular(15),
-                                                  topRight:
-                                                  const Radius.circular(15),
-                                                  bottomLeft: Radius.circular(
-                                                      meCurrUser ? 15 : 0),
-                                                  bottomRight: Radius.circular(
-                                                      meCurrUser ? 0 : 15))),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                            children: [
-                                                Flexible(
-                                                  child: Text(
-                                                      '${messages['message']}'),
-                                                ),
-                                              const SizedBox(width: 10),
-                                              Text(
-                                                formattedTime,
-                                                style:
-                                                const TextStyle(fontSize: 10),
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  );
-                                }
+                                return CustomMessageWidget(
+                                    messages: messages, meCurrUser: meCurrUser);
                               }, childCount: data['messages'].length),
                             ),
                           ],
@@ -140,7 +92,10 @@ class _ChatViewState extends State<ChatView> {
                     }
                   }
                 }),
-            SendingMessageWidget(scrollController: scrollController,productDocs: widget.productDocs,),
+            SendingMessageWidget(
+              scrollController: scrollController,
+              productDocs: widget.productDocs,
+            ),
           ],
         ),
       ),

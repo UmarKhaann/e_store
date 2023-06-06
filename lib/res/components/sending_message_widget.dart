@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,31 +21,13 @@ class SendingMessageWidget extends StatefulWidget {
 class _SendingMessageWidgetState extends State<SendingMessageWidget> {
   final ValueNotifier<bool> _isTyping = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _onHold = ValueNotifier<bool>(false);
-  String voiceChatId = '';
   final TextEditingController _chatController = TextEditingController();
-  final FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
-
-
-  Future startRecording()async{
-    voiceChatId = DateTime.now().microsecondsSinceEpoch.toString();
-    await voiceRecorder.startRecorder(
-      toFile: voiceChatId,
-    );
-    print('recording started');
-  }
-
-  Future stopRecording()async{
-    final path = await voiceRecorder.stopRecorder();
-    final audioPath = File(path!);
-    print('recording stopped');
-    return audioPath;
-  }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _chatController.dispose();
-    voiceRecorder.closeRecorder();
+    ChatModel.voiceRecorder.closeRecorder();
     super.dispose();
   }
 
@@ -57,14 +38,15 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
     initRecorder();
   }
 
-  Future initRecorder()async{
+  Future initRecorder() async {
     final status = await Permission.microphone.request();
 
-    if(status != PermissionStatus.granted){
+    if (status != PermissionStatus.granted) {
       throw RecordingPermissionException('Microphone permission not granted');
     }
-    await voiceRecorder.openRecorder();
-    voiceRecorder.setSubscriptionDuration(const Duration(milliseconds: 500));
+    await ChatModel.voiceRecorder.openRecorder();
+    ChatModel.voiceRecorder
+        .setSubscriptionDuration(const Duration(milliseconds: 500));
   }
 
   @override
@@ -82,12 +64,16 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   width: MediaQuery.of(context).size.width * .75,
                   child: StreamBuilder<RecordingDisposition>(
-                    stream: voiceRecorder.onProgress,
-                    builder: (context, snapshot){
-                      final duration = snapshot.hasData ? snapshot.data!.duration : Duration.zero;
+                    stream: ChatModel.voiceRecorder.onProgress,
+                    builder: (context, snapshot) {
+                      final duration = snapshot.hasData
+                          ? snapshot.data!.duration
+                          : Duration.zero;
                       String twoDigits(int n) => n.toString().padLeft(2, '0');
-                      final twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-                      final twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+                      final twoDigitSeconds =
+                          twoDigits(duration.inSeconds.remainder(60));
+                      final twoDigitMinutes =
+                          twoDigits(duration.inMinutes.remainder(60));
                       return Row(
                         children: [
                           const SizedBox(width: 10),
@@ -128,7 +114,7 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                   onTap: () async {
                     if (_isTyping.value == true) {
                       ChatModel.sentChatMessage(
-                        isVoiceMessage: false,
+                          isVoiceMessage: false,
                           message: _chatController.text,
                           productDocs: widget.productDocs);
                       _chatController.clear();
@@ -141,27 +127,35 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                       Utils.toastMessage('hold to record, release to send');
                     }
                   },
-                  onLongPress: () async{
+                  onLongPress: () async {
                     _onHold.value = true;
-                      await startRecording();
+                    await ChatModel.startRecording();
                   },
-                  onLongPressEnd: (data) async{
+                  onLongPressEnd: (data) async {
                     _onHold.value = false;
-                    final path = await stopRecording();
-                    Reference storageReference = FirebaseStorage.instance.ref().child('voiceMessages/$voiceChatId');
+                    final path = await ChatModel.stopRecording();
+                    Reference storageReference = FirebaseStorage.instance
+                        .ref()
+                        .child('voiceMessages/${ChatModel.voiceChatId}');
                     UploadTask uploadTask = storageReference.putFile(path);
-                    uploadTask.whenComplete(() async{
-                      final voiceMessageUrl = await storageReference.getDownloadURL();
+                    uploadTask.whenComplete(() async {
+                      final voiceMessageUrl =
+                          await storageReference.getDownloadURL();
                       ChatModel.sentChatMessage(
                           isVoiceMessage: true,
                           message: voiceMessageUrl,
                           productDocs: widget.productDocs);
-                    }).then((value) { Utils.flushBarMessage(context, 'voice message send successfully');
+                    }).then((value) {
+                      Utils.flushBarMessage(
+                          context, 'voice message send successfully');
+                      widget.scrollController.animateTo(
+                          widget.scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInCirc);
                     });
                   },
-                  icon: isTyping
-                      ? const Icon(Icons.send)
-                      : const Icon(Icons.mic),
+                  icon:
+                      isTyping ? const Icon(Icons.send) : const Icon(Icons.mic),
                 ),
               ),
             );

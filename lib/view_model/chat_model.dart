@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,45 @@ class ChatModel {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static FlutterSoundRecorder flutterSoundRecorder = FlutterSoundRecorder();
   static String pathToSaveAudion = 'audio_example.aac';
+  static final FlutterSoundPlayer player = FlutterSoundPlayer();
+  static String voiceChatId = '';
+  static final FlutterSoundRecorder voiceRecorder = FlutterSoundRecorder();
+
+  static Future startRecording()async{
+    voiceChatId = DateTime.now().microsecondsSinceEpoch.toString();
+    await voiceRecorder.startRecorder(
+      toFile: voiceChatId,
+    );
+    print('recording started');
+  }
+
+  static Future stopRecording()async{
+    final path = await voiceRecorder.stopRecorder();
+    final audioPath = File(path!);
+    print('recording stopped');
+    return audioPath;
+  }
+
+  static Future playVoiceMessage(String fileUrl, VoidCallback whenFinished) async {
+    await player.startPlayer(
+        fromURI: fileUrl,
+        whenFinished: whenFinished
+    );
+    print('audio playback started');
+  }
+
+  static Future stopVoiceMessage() async {
+    await player.stopPlayer();
+    print('audio playback started');
+  }
+
+  static Future toggleVoiceMessage({required String fileUrl, required VoidCallback whenFinished}) async {
+    if (player.isPlaying) {
+      await stopVoiceMessage();
+    } else {
+      await playVoiceMessage(fileUrl,whenFinished);
+    }
+  }
 
   static void askForMicrophonePermission(context) async {
     final PermissionStatus permissionStatus =
@@ -49,22 +89,6 @@ class ChatModel {
     }
   }
 
-  static Future _startRecordingVoiceMessage()async{
-    await flutterSoundRecorder.startRecorder(toFile: pathToSaveAudion);
-  }
-
-  static Future _stopRecordingVoiceMessage()async{
-    await flutterSoundRecorder.stopRecorder();
-  }
-
-  static Future toggleRecording()async{
-    if(flutterSoundRecorder.isStopped){
-     await _startRecordingVoiceMessage();
-    }else{
-      await _stopRecordingVoiceMessage();
-    }
-  }
-
   static sentChatMessage(
       {required bool isVoiceMessage, required String message, required dynamic productDocs}) {
     DateTime now = DateTime.now();
@@ -99,7 +123,7 @@ class ChatModel {
           "messages": [
             {
               "sender": _auth.currentUser!.uid,
-              isVoiceMessage ? "voiceMessage" : "message": message,
+              isVoiceMessage ? "voiceMessage" : "message" : message,
               "time": customFormattedDateTime,
             }
           ],
