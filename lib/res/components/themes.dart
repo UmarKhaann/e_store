@@ -29,6 +29,13 @@ class CustomTheme {
           foregroundColor: MaterialStateProperty.all(Colors.black),
         ),
       ),
+      sliderTheme: const SliderThemeData(
+        trackHeight: 2,
+        thumbColor: Colors.black,
+        activeTrackColor: Colors.black,
+        inactiveTrackColor: Colors.grey,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+      ),
     );
   }
 
@@ -58,6 +65,11 @@ class CustomTheme {
         style: ButtonStyle(
           foregroundColor: MaterialStateProperty.all(Colors.white),
         ),
+      ),
+      sliderTheme: SliderThemeData(
+        trackHeight: 2,
+        thumbColor: Colors.grey[400],
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
       ),
     );
   }

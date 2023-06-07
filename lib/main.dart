@@ -1,5 +1,6 @@
 import 'package:e_store/provider/imageProvider.dart';
 import 'package:e_store/provider/themeChangerProvider.dart';
+import 'package:e_store/provider/voice_duration.dart';
 import 'package:e_store/res/components/themes.dart';
 import 'package:e_store/shared_preference/dark_theme_data.dart';
 import 'package:e_store/utils/routes/routes.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ImageProviderFromGallery()),
         ChangeNotifierProvider(create: (_) => ThemeChangerProvider()),
+        ChangeNotifierProvider(create: (_) => VoiceDurationProvider()),
       ],
       child: Builder(
         builder: (BuildContext context) {

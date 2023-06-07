@@ -83,7 +83,8 @@ class _ChatViewState extends State<ChatView> {
                                 final meCurrUser = messages['sender'] ==
                                     _auth.currentUser!.uid;
                                 return CustomMessageWidget(
-                                    messages: messages, meCurrUser: meCurrUser);
+                                    messages: messages, meCurrUser: meCurrUser,
+                                );
                               }, childCount: data['messages'].length),
                             ),
                           ],
