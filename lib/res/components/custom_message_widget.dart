@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:e_store/provider/voice_duration.dart';
 import 'package:e_store/view_model/chat_model.dart';
 import 'package:flutter/material.dart';
@@ -48,66 +46,76 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
               alignment:
                   widget.meCurrUser ? Alignment.topRight : Alignment.topLeft,
               child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: widget.meCurrUser
-                          ? Colors.blue
-                          : Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(15),
-                          topRight: const Radius.circular(15),
-                          bottomLeft:
-                              Radius.circular(widget.meCurrUser ? 15 : 0),
-                          bottomRight:
-                              Radius.circular(widget.meCurrUser ? 0 : 15))),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      widget.messages['message'] != null
-                          ? Flexible(
-                              child: Text('${widget.messages['message']}'),
-                            )
-                          : Consumer<VoiceDurationProvider>(
-                        builder: (context, value, child) {
-                          return Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    isPlayingVoiceMessage.value =
-                                    !isPlayingVoiceMessage.value;
-                                    ChatModel.toggleVoiceMessage(
-                                        context: context,
-                                        fileUrl:
-                                        widget.messages['voiceMessage'],
-                                        whenFinished: () {
-                                          ChatModel.stopVoiceMessage(context);
-                                          isPlayingVoiceMessage.value = false;
-                                        });
-                                  },
-                                  icon: Icon(isPlayingVoiceMessage.value
-                                      ? Icons.pause
-                                      : Icons.play_arrow)),
-                              Slider(
-                                  min: 0,
-                                  max: isPlayingVoiceMessage.value ? value.voiceDuration.toDouble() : 0.0,
-                                  value: isPlayingVoiceMessage.value ? value.position.toDouble() : 0.0,
-                                  onChanged: (value) async {}),
-                              if (isPlayingVoiceMessage.value)...
-                                [Text(value.position.toString(), style: TextStyle(fontSize: 10),),
-                                Text("/ ${value.voiceDuration.toString()}", style: TextStyle(fontSize: 10),)]
-                            ],
-                          );
-                        }
-                          ),
-                      if (widget.messages['message'] != null)
-                        const SizedBox(width: 10),
-                      Text(
-                        formattedTime,
-                        style: const TextStyle(fontSize: 10),
-                      )
-                    ],
-                  )),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: widget.meCurrUser
+                        ? Colors.blue
+                        : Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(15),
+                        topRight: const Radius.circular(15),
+                        bottomLeft: Radius.circular(widget.meCurrUser ? 15 : 0),
+                        bottomRight:
+                            Radius.circular(widget.meCurrUser ? 0 : 15))),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    widget.messages['message'] != null
+                        ? Flexible(
+                            child: Text('${widget.messages['message']}'),
+                          )
+                        : Consumer<VoiceDurationProvider>(
+                            builder: (context, value, child) {
+                            return Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      isPlayingVoiceMessage.value =
+                                          !isPlayingVoiceMessage.value;
+                                      ChatModel.toggleVoiceMessage(
+                                          context: context,
+                                          fileUrl:
+                                              widget.messages['voiceMessage'],
+                                          whenFinished: () {
+                                            ChatModel.stopVoiceMessage(context);
+                                            isPlayingVoiceMessage.value = false;
+                                          });
+                                    },
+                                    icon: Icon(isPlayingVoiceMessage.value
+                                        ? Icons.pause
+                                        : Icons.play_arrow)),
+                                Slider(
+                                    min: 0,
+                                    max: isPlayingVoiceMessage.value
+                                        ? value.voiceDuration.toDouble()
+                                        : 0.0,
+                                    value: isPlayingVoiceMessage.value
+                                        ? value.position.toDouble()
+                                        : 0.0,
+                                    onChanged: (value) async {}),
+                                if (isPlayingVoiceMessage.value) ...[
+                                  Text(
+                                    value.position.toString(),
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                                  Text(
+                                    "/ ${value.voiceDuration.toString()}",
+                                    style: const TextStyle(fontSize: 10),
+                                  )
+                                ]
+                              ],
+                            );
+                          }),
+                    if (widget.messages['message'] != null)
+                      const SizedBox(width: 10),
+                    Text(
+                      formattedTime,
+                      style: const TextStyle(fontSize: 10),
+                    )
+                  ],
+                ),
+              ),
             ),
           );
         });
