@@ -128,6 +128,7 @@ class ChatModel {
               "time": customFormattedDateTime,
             }
           ]),
+          "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
         });
       } else {
         doc.set({
@@ -143,6 +144,7 @@ class ChatModel {
               "time": customFormattedDateTime,
             }
           ],
+          "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
         });
       }
     });

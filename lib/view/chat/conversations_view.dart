@@ -21,7 +21,7 @@ class _ConversationsViewState extends State<ConversationsView> {
   void initState() {
     snapShot = FirebaseFirestore.instance
         .collection('conversations')
-        .where('members', arrayContains: _auth.currentUser!.uid);
+        .where('members', arrayContains: _auth.currentUser!.uid).orderBy('lastMessageTime', descending: false);
     // TODO: implement initState
     super.initState();
   }

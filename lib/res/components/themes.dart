@@ -69,6 +69,8 @@ class CustomTheme {
       sliderTheme: SliderThemeData(
         trackHeight: 2,
         thumbColor: Colors.grey[400],
+        inactiveTrackColor: Colors.black,
+        disabledInactiveTrackColor: Colors.black,
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
       ),
     );

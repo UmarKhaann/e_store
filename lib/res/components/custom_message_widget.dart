@@ -1,3 +1,4 @@
+import 'package:e_store/provider/themeChangerProvider.dart';
 import 'package:e_store/provider/voice_duration.dart';
 import 'package:e_store/view_model/chat_model.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
                 decoration: BoxDecoration(
                     color: widget.meCurrUser
                         ? Colors.blue
-                        : Theme.of(context).cardColor,
+                        : Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme ? Colors.grey[800] : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(15),
                         topRight: const Radius.circular(15),
@@ -84,7 +85,7 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
                                     },
                                     icon: Icon(isPlayingVoiceMessage.value
                                         ? Icons.pause
-                                        : Icons.play_arrow)),
+                                        : Icons.play_arrow), color: Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme? Colors.grey[300]: Colors.black,),
                                 Slider(
                                     min: 0,
                                     max: isPlayingVoiceMessage.value
