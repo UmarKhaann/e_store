@@ -40,16 +40,19 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context) {
           final provider = Provider.of<ThemeChangerProvider>(context, listen: false);
           DarkThemeData.getThemePreference().then((value) => provider.setIsDarkTheme(value));
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            themeMode: Provider.of<ThemeChangerProvider>(context).isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-            title: 'E-Store',
-            theme: CustomTheme.lightTheme,
-            darkTheme: CustomTheme.darkTheme,
-            initialRoute: currentUser == null
-                ? RoutesName.loginView
-                : RoutesName.homeView,
-            onGenerateRoute: Routes.generateRoute,
+          return GestureDetector(
+            onTap: FocusManager.instance.primaryFocus?.unfocus,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: Provider.of<ThemeChangerProvider>(context).isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+              title: 'E-Store',
+              theme: CustomTheme.lightTheme,
+              darkTheme: CustomTheme.darkTheme,
+              initialRoute: currentUser == null
+                  ? RoutesName.loginView
+                  : RoutesName.homeView,
+              onGenerateRoute: Routes.generateRoute,
+            ),
           );
         },
       ),

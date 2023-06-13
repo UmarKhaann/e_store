@@ -1,3 +1,4 @@
+import 'package:e_store/provider/themeChangerProvider.dart';
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/res/components/custom_drawer.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
@@ -5,6 +6,7 @@ import 'package:e_store/view/home/tabs/request_tab_view.dart';
 import 'package:e_store/view/home/tabs/product_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
@@ -15,13 +17,16 @@ class HomeView extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final sellingProducts = fireStore.collection('products').where('isSellingProduct', isEqualTo: true).snapshots();
     final productsRequest = fireStore.collection('products').where('isSellingProduct', isEqualTo: false).snapshots();
+    final isDarkMode = Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         drawer: CustomDrawer(),
         appBar: AppBar(
-          title: const Text("E-Store"),
+          title: Image.asset(
+            height: 110,
+              isDarkMode? 'assets/images/darkLogo.png' : 'assets/images/lightLogo.png'),
           actions: [
             IconButton(onPressed: (){
               Navigator.pushNamed(context, RoutesName.conversationsView);

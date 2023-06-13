@@ -20,10 +20,6 @@ class CustomTheme {
         overlayColor: MaterialStateProperty.all(Colors.grey[400]),
         dividerColor: Colors.transparent,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        fillColor: Colors.white,
-        filled: true,
-      ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           foregroundColor: MaterialStateProperty.all(Colors.black),
@@ -55,10 +51,6 @@ class CustomTheme {
         labelColor: Colors.white,
         overlayColor: MaterialStateProperty.all(Colors.grey[900]),
         dividerColor: Colors.transparent,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        fillColor: Colors.grey[900],
-        filled: true,
       ),
       iconTheme: const IconThemeData(color: Colors.white),
       textButtonTheme: TextButtonThemeData(

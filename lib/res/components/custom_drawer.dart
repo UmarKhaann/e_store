@@ -112,9 +112,8 @@ class CustomDrawer extends StatelessWidget {
                 title: 'Log Out',
                 content: 'Are you sure you want to log out?',
                 yesOnPressed: () async {
-                  await _auth.signOut();
                   Navigator.pushReplacementNamed(context, RoutesName.loginView);
-                  Utils.flushBarMessage(context, 'Logged Out Successfully');
+                  await _auth.signOut().then((value) => Utils.flushBarMessage(context, 'Logged Out Successfully'));
                 },
                 noOnPressed: () {
                   Navigator.pop(context);

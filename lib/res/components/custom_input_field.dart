@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/themeChangerProvider.dart';
 
 class CustomInputField extends StatefulWidget {
   final String hintText;
@@ -9,15 +12,17 @@ class CustomInputField extends StatefulWidget {
   final int maxLines;
   final double circularBorderRadius;
   final void Function(String)? onChanged;
+  final FocusNode? focusNode;
 
   const CustomInputField(
       {required this.hintText,
       this.icon,
-        this.onChanged,
+      this.onChanged,
       this.isPasswordField = false,
-        this.circularBorderRadius = 5,
+      this.circularBorderRadius = 5,
       required this.controller,
       this.keyboardInputType = TextInputType.text,
+      this.focusNode = null,
       this.maxLines = 1,
       Key? key})
       : super(key: key);
@@ -38,6 +43,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme;
     return ValueListenableBuilder(
       valueListenable: obscureText,
       builder: (context, value, child) {
@@ -46,6 +52,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.circularBorderRadius),
             child: TextFormField(
+              focusNode: widget.focusNode,
               onChanged: widget.onChanged,
               maxLines: widget.maxLines,
               controller: widget.controller,
@@ -54,16 +61,18 @@ class _CustomInputFieldState extends State<CustomInputField> {
               keyboardType: widget.keyboardInputType,
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: isDarkTheme? Colors.grey[900] : Colors.white,
                   contentPadding: widget.icon == null
                       ? const EdgeInsets.symmetric(horizontal: 15, vertical: 5)
                       : null,
-                  prefixIcon:
-                      widget.icon == null ? null : Icon(widget.icon),
+                  prefixIcon: widget.icon == null ? null : Icon(widget.icon),
                   suffixIcon: !widget.isPasswordField
                       ? null
                       : IconButton(
                           onPressed: () {
-                            obscureText.value = obscureText.value? false: true;
+                            obscureText.value =
+                                obscureText.value ? false : true;
                           },
                           icon: Icon(obscureText.value
                               ? Icons.visibility_off
