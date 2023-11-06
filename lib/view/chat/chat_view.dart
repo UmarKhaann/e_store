@@ -1,11 +1,11 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/res/components/custom_message_widget.dart';
 import 'package:e_store/res/components/sending_message_widget.dart';
 import 'package:e_store/view_model/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../res/components/custom_drawer.dart';
 
 class ChatView extends StatefulWidget {
   final dynamic productDocs;
@@ -38,7 +38,6 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     ChatModel.player.closePlayer();
     super.dispose();
   }
@@ -49,7 +48,6 @@ class _ChatViewState extends State<ChatView> {
         initialScrollOffset: MediaQuery.of(context).size.height * 1);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
-      drawer: CustomDrawer(),
       appBar: AppBar(title: Text(widget.productDocs['title'])),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),

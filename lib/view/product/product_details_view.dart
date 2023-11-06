@@ -41,6 +41,10 @@ class ProductDetailsView extends StatelessWidget {
                         value: downloadProgress.progress)),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
+          Container(
+            color: Colors.black.withOpacity(.1),
+            height: 500,
+          ),
           SingleChildScrollView(
             child: Column(
               children: [
@@ -50,8 +54,8 @@ class ProductDetailsView extends StatelessWidget {
                 ),
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(50),
-                      topLeft: Radius.circular(50)),
+                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(40)),
                   child: Container(
                     padding: const EdgeInsets.all(25),
                     color: Theme.of(context).cardColor,
@@ -69,8 +73,8 @@ class ProductDetailsView extends StatelessWidget {
                             ),
                             Text(
                               docs['time'],
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),

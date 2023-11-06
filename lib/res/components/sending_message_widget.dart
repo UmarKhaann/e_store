@@ -1,11 +1,12 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../../utils/utils.dart';
 import '../../view_model/chat_model.dart';
 import 'custom_input_field.dart';
 import 'holdable_icon_button.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class SendingMessageWidget extends StatefulWidget {
   final ScrollController scrollController;
@@ -25,7 +26,6 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _chatController.dispose();
     ChatModel.voiceRecorder.closeRecorder();
     super.dispose();
@@ -33,7 +33,6 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initRecorder();
   }
@@ -124,7 +123,7 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeInCirc);
                     } else {
-                      Utils.toastMessage('hold to record, release to send');
+                      Utils.snackBarMessage(context, 'hold to record, release to send');
                     }
                   },
                   onLongPress: () async {
@@ -146,7 +145,7 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                           message: voiceMessageUrl,
                           productDocs: widget.productDocs);
                     }).then((value) {
-                      Utils.flushBarMessage(
+                      Utils.snackBarMessage(
                           context, 'voice message send successfully');
                       widget.scrollController.animateTo(
                           widget.scrollController.position.maxScrollExtent,

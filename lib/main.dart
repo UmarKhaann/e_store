@@ -1,14 +1,15 @@
-import 'package:e_store/provider/imageProvider.dart';
-import 'package:e_store/provider/themeChangerProvider.dart';
+import 'package:e_store/provider/image_provider.dart';
+import 'package:e_store/provider/theme_provider.dart';
 import 'package:e_store/provider/voice_duration.dart';
-import 'package:e_store/res/components/themes.dart';
+import 'package:e_store/res/components/theme.dart';
 import 'package:e_store/shared_preference/dark_theme_data.dart';
 import 'package:e_store/utils/routes/routes.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
+import 'package:e_store/view_model/home_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,27 +34,31 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ImageProviderFromGallery()),
-        ChangeNotifierProvider(create: (_) => ThemeChangerProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => VoiceDurationProvider()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel())
       ],
-      child: Builder(
-        builder: (BuildContext context) {
-          final provider = Provider.of<ThemeChangerProvider>(context, listen: false);
-          DarkThemeData.getThemePreference().then((value) => provider.setIsDarkTheme(value));
-          return GestureDetector(
-            onTap: FocusManager.instance.primaryFocus?.unfocus,
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              themeMode: Provider.of<ThemeChangerProvider>(context).isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-              title: 'E-Store',
-              theme: CustomTheme.lightTheme,
-              darkTheme: CustomTheme.darkTheme,
-              initialRoute: currentUser == null
-                  ? RoutesName.loginView
-                  : RoutesName.homeView,
-              onGenerateRoute: Routes.generateRoute,
-            ),
-          );
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child){
+          return Builder(
+          builder: (BuildContext context) {
+            DarkThemeData.getThemePreference().then((value) => themeProvider.setIsDarkTheme(value));
+            return GestureDetector(
+              onTap: FocusManager.instance.primaryFocus?.unfocus,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                themeMode: themeProvider.isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+                title: 'E-Store',
+                theme: CustomTheme.lightTheme,
+                darkTheme: CustomTheme.darkTheme,
+                initialRoute: currentUser == null
+                    ? RoutesName.loginView
+                    : RoutesName.homeView,
+                onGenerateRoute: Routes.generateRoute,
+              ),
+            );
+          },
+        );
         },
       ),
     );

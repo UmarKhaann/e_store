@@ -1,4 +1,4 @@
-import 'package:e_store/provider/themeChangerProvider.dart';
+import 'package:e_store/provider/theme_provider.dart';
 import 'package:e_store/provider/voice_duration.dart';
 import 'package:e_store/view_model/chat_model.dart';
 import 'package:flutter/material.dart';
@@ -17,20 +17,6 @@ class CustomMessageWidget extends StatefulWidget {
 }
 
 class _CustomMessageWidgetState extends State<CustomMessageWidget> {
-  ValueNotifier<bool> isPlayingVoiceMessage = ValueNotifier(false);
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    isPlayingVoiceMessage.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +24,8 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
     DateTime parsedTime = DateFormat.MMMd().add_jm().parse(storedTime);
     String formattedTime = DateFormat.jm().format(parsedTime);
 
-    return ValueListenableBuilder(
-        valueListenable: isPlayingVoiceMessage,
-        builder: (context, value, child) {
+    return Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Align(
@@ -51,7 +36,7 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
                 decoration: BoxDecoration(
                     color: widget.meCurrUser
                         ? Colors.blue
-                        : Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme ? Colors.grey[800] : Theme.of(context).cardColor,
+                        : themeProvider.isDarkTheme ? Colors.grey[800] : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.only(
                         topLeft: const Radius.circular(15),
                         topRight: const Radius.circular(15),
@@ -67,41 +52,40 @@ class _CustomMessageWidgetState extends State<CustomMessageWidget> {
                             child: Text('${widget.messages['message']}'),
                           )
                         : Consumer<VoiceDurationProvider>(
-                            builder: (context, value, child) {
+                            builder: (context, voiceDurationProvider, child) {
                             return Row(
                               children: [
                                 IconButton(
                                     onPressed: () {
-                                      isPlayingVoiceMessage.value =
-                                          !isPlayingVoiceMessage.value;
+                                      voiceDurationProvider.setIsPlayingVoiceMessage(true);
                                       ChatModel.toggleVoiceMessage(
                                           context: context,
                                           fileUrl:
                                               widget.messages['voiceMessage'],
                                           whenFinished: () {
                                             ChatModel.stopVoiceMessage(context);
-                                            isPlayingVoiceMessage.value = false;
+                                            voiceDurationProvider.setIsPlayingVoiceMessage(false);
                                           });
                                     },
-                                    icon: Icon(isPlayingVoiceMessage.value
+                                    icon: Icon(voiceDurationProvider.isPlayingVoiceMessage
                                         ? Icons.pause
-                                        : Icons.play_arrow), color: Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme? Colors.grey[300]: Colors.black,),
+                                        : Icons.play_arrow), color: themeProvider.isDarkTheme? Colors.grey[300]: Colors.black,),
                                 Slider(
                                     min: 0,
-                                    max: isPlayingVoiceMessage.value
-                                        ? value.voiceDuration.toDouble()
+                                    max: voiceDurationProvider.isPlayingVoiceMessage
+                                        ? voiceDurationProvider.voiceDuration.toDouble()
                                         : 0.0,
-                                    value: isPlayingVoiceMessage.value
-                                        ? value.position.toDouble()
+                                    value: voiceDurationProvider.isPlayingVoiceMessage
+                                        ? voiceDurationProvider.position.toDouble()
                                         : 0.0,
                                     onChanged: (value) async {}),
-                                if (isPlayingVoiceMessage.value) ...[
+                                if (voiceDurationProvider.isPlayingVoiceMessage) ...[
                                   Text(
-                                    value.position.toString(),
+                                    voiceDurationProvider.position.toString(),
                                     style: const TextStyle(fontSize: 10),
                                   ),
                                   Text(
-                                    "/ ${value.voiceDuration.toString()}",
+                                    "/ ${voiceDurationProvider.voiceDuration.toString()}",
                                     style: const TextStyle(fontSize: 10),
                                   )
                                 ]

@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/view_model/storage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../provider/imageProvider.dart';
+
+import '../../provider/image_provider.dart';
 
 class RequestProductFormView extends StatefulWidget {
   const RequestProductFormView({Key? key}) : super(key: key);
@@ -20,7 +22,6 @@ class _RequestProductFormViewState extends State<RequestProductFormView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _titleController.dispose();
     _priceController.dispose();
     _descriptionController.dispose();
@@ -92,16 +93,15 @@ class _RequestProductFormViewState extends State<RequestProductFormView> {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomInputField(hintText: 'Title', controller: _titleController),
+                CustomInputField(
+                  hintText: 'Describe what do you want?',
+                  controller: _descriptionController,
+                  maxLines: 6,
+                ),
                 CustomInputField(
                     hintText: 'Price',
                     controller: _priceController,
                     keyboardInputType: TextInputType.phone),
-                CustomInputField(
-                  hintText: 'Description',
-                  controller: _descriptionController,
-                  maxLines: 6,
-                ),
                 Expanded(child: Container()),
                 CustomButton(
                     text: 'Post Now',

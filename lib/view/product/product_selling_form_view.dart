@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/view_model/storage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../provider/imageProvider.dart';
+
+import '../../provider/image_provider.dart';
 
 class ProductSellingFormView extends StatefulWidget {
   const ProductSellingFormView({Key? key}) : super(key: key);

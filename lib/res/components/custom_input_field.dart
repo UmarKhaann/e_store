@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../provider/themeChangerProvider.dart';
 
 class CustomInputField extends StatefulWidget {
   final String hintText;
@@ -22,7 +19,7 @@ class CustomInputField extends StatefulWidget {
       this.circularBorderRadius = 5,
       required this.controller,
       this.keyboardInputType = TextInputType.text,
-      this.focusNode = null,
+      this.focusNode,
       this.maxLines = 1,
       Key? key})
       : super(key: key);
@@ -36,14 +33,12 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     obscureText.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = Provider.of<ThemeChangerProvider>(context, listen: false).isDarkTheme;
     return ValueListenableBuilder(
       valueListenable: obscureText,
       builder: (context, value, child) {
@@ -59,10 +54,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               textInputAction: TextInputAction.next,
               obscureText: widget.isPasswordField ? obscureText.value : false,
               keyboardType: widget.keyboardInputType,
-              textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: isDarkTheme? Colors.grey[900] : Colors.white,
                   contentPadding: widget.icon == null
                       ? const EdgeInsets.symmetric(horizontal: 15, vertical: 5)
                       : null,

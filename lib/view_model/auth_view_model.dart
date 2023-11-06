@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/routes/routes_name.dart';
 import '../utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthViewModel {
   static final ValueNotifier<bool> logInBtnLoading = ValueNotifier<bool>(false);
@@ -18,9 +19,9 @@ class AuthViewModel {
 
   static logInUser({context, email, password}) {
     if (email.isEmpty) {
-      Utils.flushBarMessage(context, 'Email is empty');
+      Utils.snackBarMessage(context, 'Email is empty');
     } else if (password.isEmpty) {
-      Utils.flushBarMessage(context, 'Password is empty');
+      Utils.snackBarMessage(context, 'Password is empty');
     } else {
       logInBtnLoading.value = true;
       _auth
@@ -28,10 +29,10 @@ class AuthViewModel {
           .then((value) {
         logInBtnLoading.value = false;
         Navigator.pushReplacementNamed(context, RoutesName.homeView);
-        Utils.flushBarMessage(context, "User Logged In Successfully!");
+        Utils.snackBarMessage(context, "User Logged In Successfully!");
       }).catchError((error, stackTrace) {
         logInBtnLoading.value = false;
-        Utils.flushBarMessage(context, error.message);
+        Utils.snackBarMessage(context, error.message);
       });
     }
   }
@@ -43,41 +44,44 @@ class AuthViewModel {
       required email,
       required phone,
       required password}) async {
-
     if (username.isEmpty) {
-      Utils.flushBarMessage(context, 'Username is empty');
+      Utils.snackBarMessage(context, 'Username is empty');
     } else if (fullName.isEmpty) {
-      Utils.flushBarMessage(context, 'Full Name is empty');
+      Utils.snackBarMessage(context, 'Full Name is empty');
     } else if (email.isEmpty) {
-      Utils.flushBarMessage(context, 'Email is empty');
+      Utils.snackBarMessage(context, 'Email is empty');
     } else if (phone.isEmpty) {
-      Utils.flushBarMessage(context, 'Phone is empty');
+      Utils.snackBarMessage(context, 'Phone is empty');
     } else if (password.isEmpty) {
-      Utils.flushBarMessage(context, 'Password is empty');
-    }
-    else {
+      Utils.snackBarMessage(context, 'Password is empty');
+    } else {
       signUpBtnLoading.value = true;
       final user = await _fireStore.collection('usernames').doc(username).get();
       if (user.exists) {
-        Utils.flushBarMessage(context, 'Username already taken!');
+        Utils.snackBarMessage(context, 'Username already taken!');
         signUpBtnLoading.value = false;
       } else {
-        _auth.createUserWithEmailAndPassword(email: email, password: password)
+        _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) async {
           signUpBtnLoading.value = false;
           Navigator.pushReplacementNamed(context, RoutesName.homeView);
           final newUser = _fireStore.collection('users').doc(value.user!.uid);
-          _fireStore.collection('usernames').doc(username).set({'username': username});
+          _fireStore
+              .collection('usernames')
+              .doc(username)
+              .set({'username': username});
           await newUser.set({
             'username': username,
             'fullName': fullName,
             'email': email,
             'phone': phone,
             'password': password,
-          }).then((value) => Utils.flushBarMessage(context, 'User Signed Up Successfully!'));
+          }).then((value) =>
+              Utils.snackBarMessage(context, 'User Signed Up Successfully!'));
         }).catchError((error, stackTrace) {
           signUpBtnLoading.value = false;
-          Utils.flushBarMessage(context, error.message);
+          Utils.snackBarMessage(context, error.message);
         });
       }
     }

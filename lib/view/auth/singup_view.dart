@@ -3,6 +3,7 @@ import 'package:e_store/res/components/stack_background_design.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
+
 import '../../res/components/custom_button.dart';
 
 class SignUpView extends StatefulWidget {
@@ -26,7 +27,6 @@ class _SignUpViewState extends State<SignUpView> {
     _usernameController.dispose();
     _fullNameController.dispose();
     _phoneController.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 

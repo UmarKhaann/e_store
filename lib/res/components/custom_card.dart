@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomCard extends StatelessWidget {
   final Function()? onTap;
   final QueryDocumentSnapshot<Map<String, dynamic>> docs;
 
-  const CustomCard({required this.docs, required this.onTap, Key? key})
-      : super(key: key);
+  const CustomCard({
+    required this.docs,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,9 @@ class CustomCard extends StatelessWidget {
                         'Name: ',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Expanded(child: Text(docs['title'].toString(), overflow: TextOverflow.ellipsis)),
+                      Expanded(
+                          child: Text(docs['title'].toString(),
+                              overflow: TextOverflow.ellipsis)),
                     ],
                   ),
                   Row(
@@ -63,7 +68,6 @@ class CustomCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Text(docs['description'].toString())
           ],
         ),
       ),
