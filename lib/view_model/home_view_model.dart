@@ -7,10 +7,23 @@ import 'package:flutter/material.dart';
 
 class HomeViewModel with ChangeNotifier{
   int _currentIndex = 0;
-  
   String _query = '';
+  String _profileImage = "";
+  List<dynamic> _favoritesList = [];
 
   get query => _query;
+  get profileImage => _profileImage;
+  get favoritesList => _favoritesList;
+
+  setFavoritesList(value){
+    _favoritesList = value;
+    notifyListeners();
+  }
+
+  setProfileImage(String value){
+    _profileImage = value;
+    notifyListeners();
+  }
 
   setQuery(String value){
     _query = value;

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/repository/storage_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/routes/routes_name.dart';
 import '../utils/utils.dart';
 
-class AuthViewModel {
+class AuthRepo {
   static final ValueNotifier<bool> logInBtnLoading = ValueNotifier<bool>(false);
   static final ValueNotifier<bool> signUpBtnLoading =
       ValueNotifier<bool>(false);
@@ -64,25 +65,27 @@ class AuthViewModel {
         _auth
             .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) async {
+          final profileImage = await StorageRepo.uploadItemToFirebaseStorage(context, 'images/profile/');
           signUpBtnLoading.value = false;
-          Navigator.pushReplacementNamed(context, RoutesName.homeView);
           final newUser = _fireStore.collection('users').doc(value.user!.uid);
           _fireStore
               .collection('usernames')
               .doc(username)
               .set({'username': username});
-          await newUser.set({
+          newUser.set({
+            'profileImage': profileImage.toString(),
             'username': username,
             'fullName': fullName,
             'email': email,
             'phone': phone,
             'password': password,
-          }).then((value) =>
-              Utils.snackBarMessage(context, 'User Signed Up Successfully!'));
+            'favorites':[]
+          }).then((value) => Navigator.pushReplacementNamed(context, RoutesName.homeView));
         }).catchError((error, stackTrace) {
           signUpBtnLoading.value = false;
           Utils.snackBarMessage(context, error.message);
         });
+        Utils.snackBarMessage(context, 'User Signed Up Successfully!');
       }
     }
   }

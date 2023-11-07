@@ -1,4 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/repository/home_repo.dart';
+import 'package:e_store/res/components/custom_input_field.dart';
+import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view/home/tabs/product_tab_view.dart';
 import 'package:e_store/view/home/tabs/request_tab_view.dart';
 import 'package:e_store/view_model/home_view_model.dart';
@@ -13,31 +15,19 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  final FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final TextEditingController searchController = TextEditingController();
-  late Future<QuerySnapshot<Map<String, dynamic>>> sellingProducts;
-  late Future<QuerySnapshot<Map<String, dynamic>>> productsRequest;
-
-  void searchProducts() async {
-    final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    homeViewModel.setQuery(searchController.text);
-  }
-
-  void getData() {
-    sellingProducts = fireStore
-        .collection('products')
-        .where('isSellingProduct', isEqualTo: true)
-        .get();
-    productsRequest = fireStore
-        .collection('products')
-        .where('isSellingProduct', isEqualTo: false)
-        .get();
-  }
 
   @override
   void initState() {
-    getData();
+    HomeRepo.getUserData(context);
+    HomeRepo.getPosts(context);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,29 +36,45 @@ class _HomeTabState extends State<HomeTab> {
       appBar: AppBar(
         toolbarHeight: 80,
         titleSpacing: 0,
-        leading: const Icon(Icons.person),
-        title: Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: TextField(
-            controller: searchController,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.zero,
-              hintText: 'What are you looking for?',
-              prefixIcon: const Icon(Icons.search),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).canvasColor),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).canvasColor),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onChanged: (value) {
-              searchProducts();
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Consumer<HomeViewModel>(
+            builder: (context, homeViewModel, child) {
+              return homeViewModel.profileImage.isEmpty
+                  ? CircleAvatar(
+                      backgroundColor: Theme.of(context).cardColor,
+                      child: Icon(
+                        Icons.person,
+                        color: Theme.of(context).canvasColor,
+                      ),
+                    )
+                  : CircleAvatar(
+                      backgroundColor: Theme.of(context).cardColor,
+                      backgroundImage:
+                          NetworkImage('${homeViewModel.profileImage}'),
+                    );
             },
           ),
         ),
+        title: CustomInputField(
+          controller: searchController,
+          hintText: 'What are you looking for?',
+          icon: Icons.search,
+          suffixIcon:
+              IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt)),
+          onChanged: (value) {
+            HomeRepo.searchProducts(context, searchController.text);
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.favoritesView);
+            },
+            icon: const Icon(Icons.favorite_rounded),
+            padding: EdgeInsets.zero,
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -89,13 +95,13 @@ class _HomeTabState extends State<HomeTab> {
                   children: [
                     ProductTabView(
                       data: {
-                        'sellingProducts': sellingProducts,
+                        'sellingProducts': HomeRepo.sellingProducts,
                         'query': searchController.text
                       },
                     ),
                     RequestTabView(
                       data: {
-                        'productsRequest': productsRequest,
+                        'productsRequest': HomeRepo.productsRequest,
                         'query': searchController.text
                       },
                     ),

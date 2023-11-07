@@ -11,10 +11,28 @@ import 'package:provider/provider.dart';
 import '../provider/image_provider.dart';
 import '../utils/utils.dart';
 
-class StorageModel {
+class StorageRepo {
   static final ValueNotifier<bool> btnUploadData = ValueNotifier<bool>(false);
   static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static Future<String>? uploadItemToFirebaseStorage(
+      context, referencePath) async {
+    final provider =
+        Provider.of<ImageProviderFromGallery>(context, listen: false);
+    if (provider.image != null) {
+      String fileName = basename(provider.image.path);
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('$referencePath$fileName');
+      UploadTask uploadTask =
+          storageReference.putFile(File(provider.image.path));
+      final imageUrl = await storageReference.getDownloadURL();
+      await uploadTask;
+      provider.resetImage();
+      return imageUrl;
+    }
+    return '';
+  }
 
   static void uploadProductToFirebase(
       {required context,
@@ -22,24 +40,15 @@ class StorageModel {
       required price,
       required description,
       required isSellingProduct}) async {
-    final provider =
-        Provider.of<ImageProviderFromGallery>(context, listen: false);
+    
     final userId = _auth.currentUser!.uid.toString();
-    String imageUrl = "";
-
     btnUploadData.value = true;
-    if (provider.image != null) {
-      String fileName = basename(provider.image.path);
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('images/$fileName');
-      UploadTask uploadTask =
-          storageReference.putFile(File(provider.image.path));
-      imageUrl = await storageReference.getDownloadURL();
-      await uploadTask;
-    }
+
+    String imageUrl = await uploadItemToFirebaseStorage(context, 'images/')!;
+
     final dateTime = DateTime.now().microsecondsSinceEpoch.toString();
     final newItem = _fireStore.collection('products').doc(dateTime);
-    final name = await _fireStore.collection('users').doc(userId).get();
+    final user = await _fireStore.collection('users').doc(userId).get();
 
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
@@ -47,16 +56,15 @@ class StorageModel {
     await newItem.set({
       'productId': dateTime,
       'uid': userId,
-      'name': name['fullName'].toString(),
+      'name': user['fullName'].toString(),
       'imageUrl': imageUrl.toString(),
       'isSellingProduct': isSellingProduct,
       'title': title,
       'price': price,
       'description': description,
       'time': customFormattedDateTime,
-      'phone': name['phone'].toString()
+      'phone': user['phone'].toString()
     }).then((value) {
-      provider.resetImage();
       Navigator.pop(context);
       Utils.snackBarMessage(context, 'Data uploaded Successfully');
     });

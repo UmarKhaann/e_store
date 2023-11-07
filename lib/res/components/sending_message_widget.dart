@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../repository/chat_repo.dart';
 import '../../utils/utils.dart';
-import '../../view_model/chat_model.dart';
 import 'custom_input_field.dart';
 import 'holdable_icon_button.dart';
 
@@ -98,7 +98,6 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                     onChanged: (value) {
                       _isTyping.value = value.isNotEmpty ? true : false;
                     },
-                    circularBorderRadius: 30,
                     hintText: "Type a message",
                     controller: _chatController)),
         const SizedBox(width: 10),

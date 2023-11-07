@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
@@ -22,56 +23,39 @@ class ProductTabView extends StatelessWidget {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
               snapShot.data!.docs;
           if (!data['query'].isEmpty) {
-            docs = snapShot.data!.docs.where((element) {
-              return element
-                      .data()['title']
-                      .toString()
-                      .toLowerCase()
-                      .startsWith(data['query'].toString().toLowerCase()) ||
-                  element
-                      .data()['title']
-                      .toString()
-                      .toLowerCase()
-                      .contains(data['query'].toString().trim().toLowerCase());
-            }).toList();
-
-            docs.sort((b, a) {
-              final aTitle = a.data()['title'].toString().toLowerCase();
-              final bTitle = b.data()['title'].toString().toLowerCase();
-              final query = data['query'].toString().toLowerCase();
-
-              if (aTitle.startsWith(query) && !bTitle.startsWith(query)) {
-                return -1;
-              } else if (!aTitle.startsWith(query) &&
-                  bTitle.startsWith(query)) {
-                return 1;
-              }
-
-              return aTitle.compareTo(bTitle);
-            });
+            docs =
+                HomeRepo.searchProduct(docs, 'title', data['query'].toString());
+            HomeRepo.sort(docs, data['query']);
           }
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10),
             child: docs.isEmpty
                 ? const Center(child: Text('Nothing Found!'))
-                : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 3 / 4,
-                            mainAxisSpacing: 10),
-                    itemCount: docs.length,
-                    itemBuilder: (context, index) {
-                      final reversedIndex = (docs.length - 1) - index;
-                      return CustomCard(
-                          docs: docs[reversedIndex],
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, RoutesName.productDetailView,
-                                arguments: docs[reversedIndex]);
-                          });
-                    }),
+                : RefreshIndicator(
+                    backgroundColor: Theme.of(context).secondaryHeaderColor,
+                    color: Theme.of(context).primaryColor,
+                    onRefresh: () async {
+                      await HomeRepo.getPosts(context);
+                    },
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 3 / 3.8,
+                                mainAxisSpacing: 10),
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          final reversedIndex = (docs.length - 1) - index;
+                          return CustomCard(
+                              docs: docs[reversedIndex],
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, RoutesName.productDetailView,
+                                    arguments: docs[reversedIndex]);
+                              });
+                        }),
+                  ),
           );
         }
       },

@@ -21,7 +21,7 @@ class HomeView extends StatelessWidget {
             child: GNav(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               gap: 10,
-              backgroundColor: Theme.of(context).cardColor,
+              backgroundColor: Colors.grey.shade900,
               tabBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
               tabMargin: const EdgeInsets.all(10),
               selectedIndex: homeViewModel.currentIndex,

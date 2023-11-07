@@ -3,24 +3,26 @@ import 'package:flutter/material.dart';
 class CustomInputField extends StatefulWidget {
   final String hintText;
   final IconData? icon;
+  final Widget? suffixIcon;
   final bool isPasswordField;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final TextInputType keyboardInputType;
   final int maxLines;
-  final double circularBorderRadius;
   final void Function(String)? onChanged;
   final FocusNode? focusNode;
+  final EdgeInsets padding;
 
   const CustomInputField(
       {required this.hintText,
       this.icon,
+      this.suffixIcon = null,
       this.onChanged,
       this.isPasswordField = false,
-      this.circularBorderRadius = 5,
       required this.controller,
       this.keyboardInputType = TextInputType.text,
       this.focusNode,
       this.maxLines = 1,
+      this.padding =const EdgeInsets.symmetric(vertical: 5),
       Key? key})
       : super(key: key);
 
@@ -39,13 +41,17 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   @override
   Widget build(BuildContext context) {
+    final OutlineInputBorder border = OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).canvasColor),
+                  borderRadius: BorderRadius.circular(10),
+                );
     return ValueListenableBuilder(
       valueListenable: obscureText,
       builder: (context, value, child) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
+          padding: widget.padding,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(widget.circularBorderRadius),
+            borderRadius: BorderRadius.circular(5),
             child: TextFormField(
               focusNode: widget.focusNode,
               onChanged: widget.onChanged,
@@ -55,23 +61,23 @@ class _CustomInputFieldState extends State<CustomInputField> {
               obscureText: widget.isPasswordField ? obscureText.value : false,
               keyboardType: widget.keyboardInputType,
               decoration: InputDecoration(
-                filled: true,
-                  contentPadding: widget.icon == null
-                      ? const EdgeInsets.symmetric(horizontal: 15, vertical: 5)
-                      : null,
-                  prefixIcon: widget.icon == null ? null : Icon(widget.icon),
-                  suffixIcon: !widget.isPasswordField
-                      ? null
-                      : IconButton(
-                          onPressed: () {
-                            obscureText.value =
-                                obscureText.value ? false : true;
-                          },
-                          icon: Icon(obscureText.value
-                              ? Icons.visibility_off
-                              : Icons.visibility)),
-                  hintText: widget.hintText,
-                  border: InputBorder.none),
+                contentPadding: widget.icon == null
+                    ? const EdgeInsets.symmetric(horizontal: 15, vertical: 5)
+                    : EdgeInsets.zero,
+                prefixIcon: widget.icon == null ? null : Icon(widget.icon),
+                suffixIcon: !widget.isPasswordField
+                    ? widget.suffixIcon
+                    : IconButton(
+                        onPressed: () {
+                          obscureText.value = obscureText.value ? false : true;
+                        },
+                        icon: Icon(obscureText.value
+                            ? Icons.visibility_off
+                            : Icons.visibility)),
+                hintText: widget.hintText,
+                enabledBorder: border,
+                focusedBorder: border,
+              ),
               validator: (value) {
                 if (value == null) {
                   return "field can't be empty!";

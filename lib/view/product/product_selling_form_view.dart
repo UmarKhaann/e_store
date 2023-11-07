@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:e_store/repository/storage_repo.dart';
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
-import 'package:e_store/view_model/storage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,6 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _titleController.dispose();
     _priceController.dispose();
     _descriptionController.dispose();
@@ -33,7 +32,8 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final provider = Provider.of<ImageProviderFromGallery>(context, listen: false);
+    final provider =
+        Provider.of<ImageProviderFromGallery>(context, listen: false);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -42,8 +42,8 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
         centerTitle: true,
       ),
       body: ValueListenableBuilder(
-        valueListenable: StorageModel.btnUploadData,
-        builder: (context, value, child){
+        valueListenable: StorageRepo.btnUploadData,
+        builder: (context, value, child) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -54,23 +54,24 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
                   },
                   child: Consumer<ImageProviderFromGallery>(
                       builder: (context, imageProviderFromGallery, child) {
-                        return Stack(
-                          children: [
-                            imageProviderFromGallery.image != null
-                                ? Image(
+                    return Stack(
+                      children: [
+                        imageProviderFromGallery.image != null
+                            ? Image(
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                                 height: height * .2,
-                                image: FileImage(File(imageProviderFromGallery.image!.path)))
-                                : Image(
+                                image: FileImage(
+                                    File(imageProviderFromGallery.image!.path)))
+                            : Image(
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                                 height: height * .2,
                                 image: const AssetImage(
                                     'assets/images/defaultImage.jpeg')),
-                            imageProviderFromGallery.image != null
-                                ? const SizedBox()
-                                : Positioned(
+                        imageProviderFromGallery.image != null
+                            ? const SizedBox()
+                            : Positioned(
                                 bottom: height * .01,
                                 right: width * .3,
                                 child: const Row(
@@ -87,14 +88,15 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
                                     )
                                   ],
                                 ))
-                          ],
-                        );
-                      }),
+                      ],
+                    );
+                  }),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                CustomInputField(hintText: 'Title', controller: _titleController),
+                CustomInputField(
+                    hintText: 'Title', controller: _titleController),
                 CustomInputField(
                     hintText: 'Price',
                     controller: _priceController,
@@ -107,15 +109,14 @@ class _ProductSellingFormViewState extends State<ProductSellingFormView> {
                 Expanded(child: Container()),
                 CustomButton(
                     text: 'Post Now',
-                    isLoading: StorageModel.btnUploadData.value,
+                    isLoading: StorageRepo.btnUploadData.value,
                     onPressed: () {
-                      StorageModel.uploadProductToFirebase(
+                      StorageRepo.uploadProductToFirebase(
                           context: context,
                           title: _titleController.text,
                           price: _priceController.text,
                           description: _descriptionController.text,
-                          isSellingProduct: true
-                      );
+                          isSellingProduct: true);
                     }),
                 const Divider(),
               ],

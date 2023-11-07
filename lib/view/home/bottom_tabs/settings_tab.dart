@@ -14,7 +14,9 @@ class SettingsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Settings"),),
+      appBar: AppBar(
+        title: const Text("Settings"),
+      ),
       body: Column(
         children: [
           const ListTile(
@@ -27,8 +29,9 @@ class SettingsTab extends StatelessWidget {
                 thumbIcon: MaterialStateProperty.all(Icon(
                     themeChangerProvider.isDarkTheme
                         ? Icons.dark_mode
-                        : Icons.light_mode)),
-                thumbColor: MaterialStateProperty.all(Theme.of(context).canvasColor),
+                        : Icons.light_mode, color: Colors.black,)),
+                thumbColor:
+                    MaterialStateProperty.all(Colors.white),
                 title: Row(
                   children: [
                     Icon(themeChangerProvider.isDarkTheme
@@ -54,17 +57,21 @@ class SettingsTab extends StatelessWidget {
             title: const Text('Log Out'),
             onTap: () {
               showDialog(
-                  context: context, builder: (_) => CustomAlertBox(
-                title: 'Log Out',
-                content: 'Are you sure you want to log out?',
-                yesOnPressed: () async {
-                  Navigator.pushReplacementNamed(context, RoutesName.loginView);
-                  await _auth.signOut().then((value) => Utils.snackBarMessage(context, 'Logged Out Successfully'));
-                },
-                noOnPressed: () {
-                  Navigator.pop(context);
-                },
-              ));
+                  context: context,
+                  builder: (_) => CustomAlertBox(
+                        title: 'Log Out',
+                        content: 'Are you sure you want to log out?',
+                        yesOnPressed: () async {
+                          _auth.signOut().then((value) =>
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  RoutesName.loginView, (route) => false));
+                          Utils.snackBarMessage(
+                              context, 'Logged Out Successfully');
+                        },
+                        noOnPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ));
             },
           ),
         ],

@@ -1,5 +1,5 @@
+import 'package:e_store/repository/auth_repo.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
-import 'package:e_store/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../res/components/custom_button.dart';
@@ -60,9 +60,9 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 CustomButton(
                     text: 'LOGIN',
-                    isLoading: AuthViewModel.logInBtnLoading.value,
+                    isLoading: AuthRepo.logInBtnLoading.value,
                     onPressed: () async {
-                      await AuthViewModel.logInUser(
+                      await AuthRepo.logInUser(
                           context: context,
                           email: _emailController.text,
                           password: _passwordController.text);

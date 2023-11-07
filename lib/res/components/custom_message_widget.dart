@@ -1,6 +1,6 @@
 import 'package:e_store/provider/theme_provider.dart';
 import 'package:e_store/provider/voice_duration.dart';
-import 'package:e_store/view_model/chat_model.dart';
+import 'package:e_store/repository/chat_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

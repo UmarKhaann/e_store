@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/repository/chat_repo.dart';
 import 'package:e_store/res/components/custom_message_widget.dart';
 import 'package:e_store/res/components/sending_message_widget.dart';
-import 'package:e_store/view_model/chat_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

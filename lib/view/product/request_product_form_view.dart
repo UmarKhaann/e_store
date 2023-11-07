@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:e_store/repository/storage_repo.dart';
 import 'package:e_store/res/components/custom_button.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
-import 'package:e_store/view_model/storage_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +41,7 @@ class _RequestProductFormViewState extends State<RequestProductFormView> {
         centerTitle: true,
       ),
       body: ValueListenableBuilder(
-        valueListenable: StorageModel.btnUploadData,
+        valueListenable: StorageRepo.btnUploadData,
         builder: (context, value, child){
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -105,9 +105,9 @@ class _RequestProductFormViewState extends State<RequestProductFormView> {
                 Expanded(child: Container()),
                 CustomButton(
                     text: 'Post Now',
-                    isLoading: StorageModel.btnUploadData.value,
+                    isLoading: StorageRepo.btnUploadData.value,
                     onPressed: () {
-                      StorageModel.uploadProductToFirebase(
+                      StorageRepo.uploadProductToFirebase(
                           context: context,
                           title: _titleController.text,
                           price: _priceController.text,

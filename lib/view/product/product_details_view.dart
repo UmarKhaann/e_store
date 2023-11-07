@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_store/res/components/custom_button.dart';
+import 'package:e_store/res/components/favorite_button.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/product_detail_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,19 +28,26 @@ class ProductDetailsView extends StatelessWidget {
             )),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          FavoriteButton(productId: docs['productId']),
+          const SizedBox(width: 10,),
+        ],
       ),
       body: Stack(
         children: [
-          CachedNetworkImage(
-            width: double.infinity,
-            height: height * .45,
-            fit: BoxFit.cover,
-            imageUrl: docs['imageUrl'].toString(),
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Center(
-                    child: CircularProgressIndicator(
-                        value: downloadProgress.progress)),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
+          Hero(
+            tag: docs['imageUrl'],
+            child: CachedNetworkImage(
+              width: double.infinity,
+              height: height * .45,
+              fit: BoxFit.cover,
+              imageUrl: docs['imageUrl'].toString(),
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress)),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
           ),
           Container(
             color: Colors.black.withOpacity(.1),

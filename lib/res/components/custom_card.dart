@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/res/components/favorite_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
@@ -19,52 +20,52 @@ class CustomCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: EdgeInsets.zero,
         child: Column(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(10), right: Radius.circular(10)),
-              child: CachedNetworkImage(
-                width: width,
-                height: height * .2,
-                fit: BoxFit.cover,
-                imageUrl: docs['imageUrl'].toString(),
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                        child: CircularProgressIndicator(
-                            value: downloadProgress.progress)),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(10)),
+              child: Hero(
+                tag: docs['imageUrl'],
+                child: CachedNetworkImage(
+                  width: width,
+                  height: height * .17,
+                  fit: BoxFit.cover,
+                  imageUrl: docs['imageUrl'].toString(),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: CircularProgressIndicator(
+                              value: downloadProgress.progress)),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
-            SizedBox(
-              height: height * .01,
-            ),
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10, right: 5),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Name: ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Text(
+                        '${docs['price']} Rs',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Expanded(
-                          child: Text(docs['title'].toString(),
-                              overflow: TextOverflow.ellipsis)),
+                      Container(
+                          constraints:
+                              BoxConstraints.tight(const Size(30, 35)),
+                          child:
+                              FavoriteButton(productId: docs['productId'])),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Rs: ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(docs['price'].toString()),
-                    ],
-                  ),
+                  Text(docs['title'].toString(),
+                      overflow: TextOverflow.ellipsis),
+                  Text(docs['time'].toString()),
                 ],
               ),
             ),
