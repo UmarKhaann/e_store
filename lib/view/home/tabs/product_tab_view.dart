@@ -12,8 +12,7 @@ class ProductTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: data['sellingProducts']
-          as Future<QuerySnapshot<Map<String, dynamic>>>,
+      future: HomeRepo.sellingProducts,
       builder: (context, snapShot) {
         if (snapShot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -32,8 +31,7 @@ class ProductTabView extends StatelessWidget {
             child: docs.isEmpty
                 ? const Center(child: Text('Nothing Found!'))
                 : RefreshIndicator(
-                    backgroundColor: Theme.of(context).secondaryHeaderColor,
-                    color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).iconTheme.color,
                     onRefresh: () async {
                       await HomeRepo.getPosts(context);
                     },

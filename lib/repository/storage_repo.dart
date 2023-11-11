@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -21,15 +22,16 @@ class StorageRepo {
     final provider =
         Provider.of<ImageProviderFromGallery>(context, listen: false);
     if (provider.image != null) {
-      String fileName = basename(provider.image.path);
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('$referencePath$fileName');
-      UploadTask uploadTask =
-          storageReference.putFile(File(provider.image.path));
-      final imageUrl = await storageReference.getDownloadURL();
-      await uploadTask;
-      provider.resetImage();
-      return imageUrl;
+      final path = provider.image is XFile ? provider.image.path : provider.image;
+      if (provider.image is XFile) {
+        String fileName = basename(path);
+        Reference storageReference =
+            FirebaseStorage.instance.ref().child('$referencePath$fileName');
+        UploadTask uploadTask = storageReference.putFile(File(path));
+        final imageUrl = await storageReference.getDownloadURL();
+        await uploadTask;
+        return imageUrl;
+      }
     }
     return '';
   }
@@ -40,7 +42,6 @@ class StorageRepo {
       required price,
       required description,
       required isSellingProduct}) async {
-    
     final userId = _auth.currentUser!.uid.toString();
     btnUploadData.value = true;
 

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/provider/image_provider.dart';
 import 'package:e_store/repository/storage_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/routes/routes_name.dart';
 import '../utils/utils.dart';
@@ -9,6 +11,8 @@ import '../utils/utils.dart';
 class AuthRepo {
   static final ValueNotifier<bool> logInBtnLoading = ValueNotifier<bool>(false);
   static final ValueNotifier<bool> signUpBtnLoading =
+      ValueNotifier<bool>(false);
+  static final ValueNotifier<bool> updateBtnLoading =
       ValueNotifier<bool>(false);
 
   static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -65,9 +69,11 @@ class AuthRepo {
         _auth
             .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) async {
-          final profileImage = await StorageRepo.uploadItemToFirebaseStorage(context, 'images/profile/');
+          final profileImage = await StorageRepo.uploadItemToFirebaseStorage(
+              context, 'images/profile/');
           signUpBtnLoading.value = false;
           final newUser = _fireStore.collection('users').doc(value.user!.uid);
+          final List<String> favorites = [];
           _fireStore
               .collection('usernames')
               .doc(username)
@@ -79,14 +85,44 @@ class AuthRepo {
             'email': email,
             'phone': phone,
             'password': password,
-            'favorites':[]
-          }).then((value) => Navigator.pushReplacementNamed(context, RoutesName.homeView));
+            'favorites': favorites
+          }).then((value) =>
+              Navigator.pushReplacementNamed(context, RoutesName.homeView));
+              Utils.snackBarMessage(context, 'User Signed Up Successfully!');
         }).catchError((error, stackTrace) {
           signUpBtnLoading.value = false;
-          Utils.snackBarMessage(context, error.message);
+          Utils.snackBarMessage(context, error.toString());
         });
-        Utils.snackBarMessage(context, 'User Signed Up Successfully!');
       }
     }
+  }
+
+  static updateUserInfo(
+      {required BuildContext context,
+      required String profileImage,
+      required String name,
+      required String email,
+      required String phone,
+      required String password}) async {
+    updateBtnLoading.value = true;
+    final provider =
+        Provider.of<ImageProviderFromGallery>(context, listen: false);
+    final profileImageUrl = await StorageRepo.uploadItemToFirebaseStorage(
+        context, 'images/profile/');
+    final uid = _auth.currentUser!.uid;
+    await _auth.currentUser!.updateEmail(email);
+    await _auth.currentUser!.updatePassword(password);
+    _fireStore.collection('users').doc(uid).update({
+      'profileImage':
+          profileImageUrl!.isEmpty ? provider.image : profileImageUrl,
+      'fullName': name,
+      'email': email,
+      'phone': phone,
+      'password': password,
+    }).then((value) {
+      updateBtnLoading.value = false;
+      Utils.snackBarMessage(context, 'Saved changes successfully!');
+      return Future<void>;
+    });
   }
 }

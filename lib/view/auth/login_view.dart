@@ -67,6 +67,15 @@ class _LoginViewState extends State<LoginView> {
                           email: _emailController.text,
                           password: _passwordController.text);
                     }),
+                TextButton(
+                  onPressed: () {
+                    
+                  },
+                  child: const Text(
+                    'forgot password?',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -78,14 +87,15 @@ class _LoginViewState extends State<LoginView> {
                       },
                       child: const Text(
                         'SIGNUP',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
                 ),
                 Expanded(
-                  flex: _emailFocusNode.hasFocus || _passwordFocusNode.hasFocus ? 2 : 1,
+                  flex: _emailFocusNode.hasFocus || _passwordFocusNode.hasFocus
+                      ? 2
+                      : 1,
                   child: Container(),
                 ),
               ],

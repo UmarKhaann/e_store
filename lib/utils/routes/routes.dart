@@ -5,6 +5,7 @@ import 'package:e_store/view/favorites_view.dart';
 import 'package:e_store/view/product/product_details_view.dart';
 import 'package:e_store/view/product/product_selling_form_view.dart';
 import 'package:e_store/view/product/request_product_form_view.dart';
+import 'package:e_store/view/profile.dart';
 import 'package:flutter/material.dart';
 
 import '../../view/chat/chat_view.dart';
@@ -36,6 +37,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => ChatView(productDocs: settings.arguments));
       case RoutesName.favoritesView:
         return MaterialPageRoute(builder: (_) => FavoritesView());
+      case RoutesName.profileView:
+        return MaterialPageRoute(builder: (_) => ProfileView());
 
       default:
         return MaterialPageRoute(builder: (_) {

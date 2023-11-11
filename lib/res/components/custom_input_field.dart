@@ -11,6 +11,8 @@ class CustomInputField extends StatefulWidget {
   final void Function(String)? onChanged;
   final FocusNode? focusNode;
   final EdgeInsets padding;
+  final String password;
+  final String confirmPassword;
 
   const CustomInputField(
       {required this.hintText,
@@ -23,6 +25,8 @@ class CustomInputField extends StatefulWidget {
       this.focusNode,
       this.maxLines = 1,
       this.padding =const EdgeInsets.symmetric(vertical: 5),
+      this.password = "",
+      this.confirmPassword = "",
       Key? key})
       : super(key: key);
 
@@ -77,10 +81,16 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 hintText: widget.hintText,
                 enabledBorder: border,
                 focusedBorder: border,
+                errorBorder: border,
+                focusedErrorBorder: border,
               ),
               validator: (value) {
-                if (value == null) {
+                if (value!.isEmpty) {
                   return "field can't be empty!";
+                }else if(widget.isPasswordField){
+                  if(widget.password != widget.confirmPassword){
+                    return "password didn't match!";
+                  }
                 }
                 return null;
               },

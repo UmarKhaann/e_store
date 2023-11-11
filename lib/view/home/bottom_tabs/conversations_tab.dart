@@ -77,6 +77,7 @@ class _ConversationsTabState extends State<ConversationsTab> {
                       if (homeViewModel.query.isNotEmpty) {
                         docs = HomeRepo.searchProduct(
                             docs, 'productName', homeViewModel.query);
+                        HomeRepo.sort(docs, homeViewModel.query);
                       }
                       return docs.isEmpty
                           ? const Center(child: Text('Nothing Found!'))

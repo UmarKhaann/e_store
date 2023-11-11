@@ -14,139 +14,128 @@ class ProductDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          FavoriteButton(productId: docs['productId']),
-          const SizedBox(width: 10,),
-        ],
-      ),
-      body: Stack(
-        children: [
-          Hero(
-            tag: docs['imageUrl'],
-            child: CachedNetworkImage(
-              width: double.infinity,
-              height: height * .45,
-              fit: BoxFit.cover,
-              imageUrl: docs['imageUrl'].toString(),
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Center(
-                      child: CircularProgressIndicator(
-                          value: downloadProgress.progress)),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              )),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            FavoriteButton(productId: docs['productId']),
+            const SizedBox(
+              width: 10,
             ),
-          ),
-          Container(
-            color: Colors.black.withOpacity(.1),
-            height: 500,
-          ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: height * .40,
-                ),
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(40),
-                      topLeft: Radius.circular(40)),
-                  child: Container(
-                    padding: const EdgeInsets.all(25),
-                    color: Theme.of(context).cardColor,
-                    height: height * .60,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Rs ${docs['price']}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            Text(
-                              docs['time'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          docs['title'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Text(
-                          'Description',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        SizedBox(
-                          height: height * .35,
-                          child: ListView(
-                            padding: EdgeInsets.zero,
+          ],
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Hero(
+                      tag: docs['imageUrl'],
+                      child: CachedNetworkImage(
+                        color: Colors.black.withOpacity(.2),
+                        colorBlendMode: BlendMode.darken,
+                        width: double.infinity,
+                        height: height * .35,
+                        fit: BoxFit.cover,
+                        imageUrl: docs['imageUrl'].toString(),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                                child: CircularProgressIndicator(
+                                    value: downloadProgress.progress)),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                docs['description'],
-                                style: const TextStyle(color: Colors.grey),
+                                'Rs ${docs['price']}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              Text(
+                                docs['time'],
+                                style:
+                                    const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
-                        ),
-                        Expanded(child: Container()),
-                        if (docs['uid'] != _auth.currentUser!.uid)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CustomButton(
-                                  width: 110,
-                                  text: 'SMS',
-                                  onPressed: () async {
-                                    ProductDetailModel.launchTextMessage(
-                                        phone: docs['phone']);
-                                  }),
-                              CustomButton(
-                                  width: 110,
-                                  text: 'CALL',
-                                  onPressed: () {
-                                    ProductDetailModel.launchCall(
-                                        phone: docs['phone']);
-                                  }),
-                              CustomButton(
-                                  width: 110,
-                                  text: 'CHAT',
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, RoutesName.chatView,
-                                        arguments: docs);
-                                  }),
-                            ],
+                          Text(
+                            docs['title'],
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                      ],
-                    ),
-                  ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            'Description',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          Text(
+                            docs['description'],
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
-          )
-        ],
+            if (docs['uid'] != _auth.currentUser!.uid)
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomButton(
+                        width: width * .3,
+                        text: 'SMS',
+                        onPressed: () async {
+                          ProductDetailModel.launchTextMessage(
+                              phone: docs['phone']);
+                        }),
+                    CustomButton(
+                        width: width * .3,
+                        text: 'CALL',
+                        onPressed: () {
+                          ProductDetailModel.launchCall(phone: docs['phone']);
+                        }),
+                    CustomButton(
+                        width: width * .3,
+                        text: 'CHAT',
+                        onPressed: () {
+                          Navigator.pushNamed(context, RoutesName.chatView,
+                              arguments: docs);
+                        }),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteButton extends StatelessWidget {
-  final dynamic productId;
+  final String productId;
   const FavoriteButton({required this.productId, super.key});
 
   @override
@@ -18,7 +18,7 @@ class FavoriteButton extends StatelessWidget {
           },
           icon: Icon(homeViewModel.favoritesList.contains(productId)
               ? Icons.favorite_rounded
-              : Icons.favorite_border_rounded),
+              : Icons.favorite_border_rounded, color: Colors.red,),
         );
       },
     );

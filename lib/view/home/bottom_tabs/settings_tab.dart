@@ -19,9 +19,12 @@ class SettingsTab extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Profile'),
+          ListTile(
+            onTap: (){
+              Navigator.pushNamed(context, RoutesName.profileView);
+            },
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
           ),
           Consumer<ThemeProvider>(
               builder: (context, themeChangerProvider, child) {

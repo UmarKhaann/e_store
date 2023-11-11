@@ -10,12 +10,22 @@ class HomeRepo {
   static late Future<QuerySnapshot<Map<String, dynamic>>> sellingProducts;
   static late Future<QuerySnapshot<Map<String, dynamic>>> productsRequest;
   static late Stream<QuerySnapshot<Map<String, dynamic>>> conversations;
+  static late Future<QuerySnapshot<Map<String, dynamic>>> favoriteProducts;
 
   static final currentUserUid = auth.currentUser!.uid;
   static final currentUserDoc =
       fireStore.collection('users').doc(currentUserUid);
 
-  // static late final List<dynamic> favoritesList;
+  
+  static Future<List> getIdsOfFavorites()async{
+    final ids = await currentUserDoc.get();
+    return ids['favorites'];
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getFavorites(whereIn) {
+    favoriteProducts = fireStore.collection('products').where('productId', whereIn: whereIn).get();
+    return favoriteProducts;
+  }
 
   static void searchProducts(context, query) async {
     final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
@@ -49,12 +59,15 @@ class HomeRepo {
   static Future<void> getPosts(context) async {
     final provider = Provider.of<HomeViewModel>(context, listen: false);
     final products = fireStore.collection('products');
-    currentUserDoc.get().then((value) => provider.setFavoritesList(value.data()!['favorites']));
+    currentUserDoc
+        .get()
+        .then((value) => provider.setFavoritesList(value.data()!['favorites']));
     sellingProducts = products.where('isSellingProduct', isEqualTo: true).get();
-    productsRequest = products.where('isSellingProduct', isEqualTo: false).get();
+    productsRequest =
+        products.where('isSellingProduct', isEqualTo: false).get();
   }
 
-  static getConversations(){
+  static getConversations() {
     conversations = fireStore
         .collection('conversations')
         .where('members', arrayContains: currentUserUid)
@@ -65,7 +78,7 @@ class HomeRepo {
   static void getUserData(context) async {
     final provider = Provider.of<HomeViewModel>(context, listen: false);
     final snapShot = await currentUserDoc.get();
-    provider.setProfileImage(snapShot.data()!['profileImage']);
+    provider.setUserData(snapShot);
   }
 
   static setFavorite(context, productId) {

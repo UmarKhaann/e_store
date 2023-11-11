@@ -1,3 +1,4 @@
+import 'package:e_store/provider/image_provider.dart';
 import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
@@ -40,19 +41,26 @@ class _HomeTabState extends State<HomeTab> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Consumer<HomeViewModel>(
             builder: (context, homeViewModel, child) {
-              return homeViewModel.profileImage.isEmpty
-                  ? CircleAvatar(
-                      backgroundColor: Theme.of(context).cardColor,
-                      child: Icon(
-                        Icons.person,
-                        color: Theme.of(context).canvasColor,
-                      ),
-                    )
-                  : CircleAvatar(
-                      backgroundColor: Theme.of(context).cardColor,
-                      backgroundImage:
-                          NetworkImage('${homeViewModel.profileImage}'),
-                    );
+              final bool hasProfileImage = homeViewModel.userData.data()!['profileImage'].isEmpty;
+              return InkWell(
+                onTap: (){
+                  final value = Provider.of<ImageProviderFromGallery>(context, listen: false);
+                  value.assignImage(homeViewModel.userData.data()!['profileImage']);
+                  Navigator.pushNamed(context, RoutesName.profileView);
+
+                },
+                child: CircleAvatar(
+                  backgroundColor: Theme.of(context).cardColor,
+                  backgroundImage: hasProfileImage
+                      ? null
+                      : NetworkImage('${homeViewModel.userData.data()!['profileImage']}'),
+                  child: hasProfileImage
+                      ? const Icon(
+                          Icons.person,
+                        )
+                      : null,
+                ),
+              );
             },
           ),
         ),
@@ -69,7 +77,12 @@ class _HomeTabState extends State<HomeTab> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.favoritesView);
+              HomeRepo.getIdsOfFavorites().then((value) {
+                if(value.isNotEmpty){
+                  HomeRepo.getFavorites(value);
+                }
+                Navigator.pushNamed(context, RoutesName.favoritesView);
+              });
             },
             icon: const Icon(Icons.favorite_rounded),
             padding: EdgeInsets.zero,
@@ -94,16 +107,10 @@ class _HomeTabState extends State<HomeTab> {
                 child: TabBarView(
                   children: [
                     ProductTabView(
-                      data: {
-                        'sellingProducts': HomeRepo.sellingProducts,
-                        'query': searchController.text
-                      },
+                      data: {'query': searchController.text},
                     ),
                     RequestTabView(
-                      data: {
-                        'productsRequest': HomeRepo.productsRequest,
-                        'query': searchController.text
-                      },
+                      data: {'query': searchController.text},
                     ),
                   ],
                 ),

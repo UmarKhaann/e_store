@@ -12,8 +12,7 @@ class RequestTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return FutureBuilder(
-      future: data['productsRequest']
-          as Future<QuerySnapshot<Map<String, dynamic>>>,
+      future: HomeRepo.productsRequest,
       builder: (context, snapShot) {
         if (snapShot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -33,8 +32,6 @@ class RequestTabView extends StatelessWidget {
               child: docs.isEmpty
                   ? const Center(child: Text('Nothing Found!'))
                   : RefreshIndicator(
-                      backgroundColor: Theme.of(context).secondaryHeaderColor,
-                      color: Theme.of(context).primaryColor,
                       onRefresh: () async {
                         await HomeRepo.getPosts(context);
                       },

@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).canvasColor,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         width: width,
         height: height,

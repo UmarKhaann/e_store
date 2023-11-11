@@ -6,6 +6,7 @@ import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/res/components/stack_background_design.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../res/components/custom_button.dart';
@@ -55,23 +56,18 @@ class _SignUpViewState extends State<SignUpView> {
                         onTap: () {
                           imageProviderFromgallery.setImage();
                         },
-                        child: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 70,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: imageProviderFromgallery.image !=
-                                      null
-                                  ? FileImage(
-                                      File(imageProviderFromgallery.image.path))
-                                  : const AssetImage(
-                                          'assets/images/defaultImage.jpeg')
-                                      as ImageProvider,
-                            ),
-                            const Positioned(
-                                bottom: 0, left: 0, child: Icon(Icons.add)),
-                          ],
-                        ),
+                        child: imageProviderFromgallery.image is XFile
+                            ? CircleAvatar(
+                                radius: 70,
+                                backgroundColor: Theme.of(context).cardColor,
+                                backgroundImage: FileImage(File(
+                                    '${imageProviderFromgallery.image.path}')),
+                              )
+                            : CircleAvatar(
+                                radius: 70,
+                                backgroundColor: Theme.of(context).cardColor,
+                                child: const Icon(Icons.person),
+                              ),
                       );
                     },
                   ),

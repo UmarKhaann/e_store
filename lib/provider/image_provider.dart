@@ -3,12 +3,17 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageProviderFromGallery extends ChangeNotifier {
   final ImagePicker _imagePicker = ImagePicker();
-  XFile? _image;
+  dynamic _image;
 
   get image => _image;
 
   resetImage() {
     _image = null;
+    notifyListeners();
+  }
+
+  assignImage(String value){
+    _image = value;
     notifyListeners();
   }
 
