@@ -26,4 +26,13 @@ class ImageProviderFromGallery extends ChangeNotifier {
     }
     notifyListeners();
   }
+  Future<void> setImageFromCamera() async {
+    final XFile? pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 70);
+
+    if (pickedFile != null) {
+      _image = pickedFile;
+    }
+    notifyListeners();
+  }
 }

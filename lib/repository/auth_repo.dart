@@ -44,11 +44,11 @@ class AuthRepo {
 
   static signUpUser(
       {required context,
-      required username,
-      required fullName,
-      required email,
-      required phone,
-      required password}) async {
+      required String username,
+      required String fullName,
+      required String email,
+      required String phone,
+      required String password}) async {
     if (username.isEmpty) {
       Utils.snackBarMessage(context, 'Username is empty');
     } else if (fullName.isEmpty) {
@@ -82,7 +82,7 @@ class AuthRepo {
             'profileImage': profileImage.toString(),
             'username': username,
             'fullName': fullName,
-            'email': email,
+            'email': email, 
             'phone': phone,
             'password': password,
             'favorites': favorites

@@ -108,7 +108,10 @@ class _ConversationsTabState extends State<ConversationsTab> {
                                             context, RoutesName.chatView,
                                             arguments: map);
                                       },
-                                      leading: CircleAvatar(
+                                      leading: docs[reversedIndex]['imageUrl'].isEmpty? const CircleAvatar(
+                                        backgroundColor: Colors.grey,
+                                        child: Icon(Icons.person, color: Colors.white,),
+                                      ):CircleAvatar(
                                         backgroundColor: Colors.transparent,
                                         backgroundImage:
                                             CachedNetworkImageProvider(

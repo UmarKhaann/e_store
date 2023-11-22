@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class ProfileView extends StatefulWidget {
-  const ProfileView({super.key});
+class AccountView extends StatefulWidget {
+  const AccountView({super.key});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  State<AccountView> createState() => _AccountViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _AccountViewState extends State<AccountView> {
   late TextEditingController nameController;
   late TextEditingController emailController;
   late TextEditingController phoneController;
@@ -59,9 +59,7 @@ class _ProfileViewState extends State<ProfileView> {
     if (formkey.currentState!.validate()) {
       await AuthRepo.updateUserInfo(
         context: context,
-        profileImage: image is XFile
-            ? image.path
-            : image,
+        profileImage: image is XFile ? image.path : image,
         name: nameController.text,
         email: emailController.text,
         phone: phoneController.text,
@@ -74,7 +72,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('Account')),
       body: SingleChildScrollView(
         child: Consumer<ImageProviderFromGallery>(
           builder: (context, imageProviderFromgallery, child) {
@@ -88,7 +86,41 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     InkWell(
                       onTap: () {
-                        imageProviderFromgallery.setImage();
+                        showModalBottomSheet(
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            builder: (context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    onTap: () {
+                                      imageProviderFromgallery
+                                          .setImageFromCamera();
+                                      Navigator.pop(context);
+                                    },
+                                    title: const Text('Take a photo'),
+                                  ),
+                                  ListTile(
+                                    onTap: () {
+                                      imageProviderFromgallery.setImage();
+                                      Navigator.pop(context);
+                                    },
+                                    title: const Text('Pick from gallery'),
+                                  ),
+                                  ListTile(
+                                    onTap: () {},
+                                    title: const Text('Remove photo'),
+                                  ),
+                                  ListTile(
+                                    onTap: () => Navigator.pop(context),
+                                    title: const Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            });
                       },
                       child: imageProviderFromgallery.image is XFile
                           ? CircleAvatar(
@@ -103,20 +135,22 @@ class _ProfileViewState extends State<ProfileView> {
                           : CircleAvatar(
                               radius: 70,
                               backgroundColor: Theme.of(context).cardColor,
-                              backgroundImage: NetworkImage(
-                                  imageProviderFromgallery.image),
+                              backgroundImage:
+                                  NetworkImage(imageProviderFromgallery.image),
                               child: hasProfileImage
                                   ? const Text('Add image')
                                   : null,
                             ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     const Text(' Username'),
                     CustomInputField(
                       hintText: '',
                       controller: userNameController,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                     ),
@@ -125,7 +159,7 @@ class _ProfileViewState extends State<ProfileView> {
                       hintText: '',
                       controller: nameController,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                     ),
@@ -134,7 +168,7 @@ class _ProfileViewState extends State<ProfileView> {
                       hintText: '',
                       controller: emailController,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                     ),
@@ -143,7 +177,7 @@ class _ProfileViewState extends State<ProfileView> {
                       hintText: '',
                       controller: phoneController,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                     ),
@@ -153,7 +187,7 @@ class _ProfileViewState extends State<ProfileView> {
                       controller: passwordController,
                       isPasswordField: true,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                       password: passwordController.text,
@@ -165,7 +199,7 @@ class _ProfileViewState extends State<ProfileView> {
                       controller: confirmPasswordController,
                       isPasswordField: true,
                       padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value){
+                      onChanged: (value) {
                         formkey.currentState!.validate();
                       },
                       password: passwordController.text,
@@ -177,6 +211,9 @@ class _ProfileViewState extends State<ProfileView> {
                         onPressed: () {
                           updateUserData(imageProviderFromgallery.image);
                         }),
+                    const SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),

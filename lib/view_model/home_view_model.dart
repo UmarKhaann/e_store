@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/view/home/bottom_tabs/conversations_tab.dart';
 import 'package:e_store/view/home/bottom_tabs/home_tab.dart';
 import 'package:e_store/view/home/bottom_tabs/my_ads_tab.dart';
-import 'package:e_store/view/home/bottom_tabs/post_tab.dart';
+import 'package:e_store/view/home/bottom_tabs/post_form.dart';
 import 'package:e_store/view/home/bottom_tabs/settings_tab.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +41,11 @@ class HomeViewModel with ChangeNotifier{
   final List<Widget> _tabs = [
     HomeTab(),
     ConversationsTab(),
-    PostTab(),
+    // PostTab(),
+    PostForm(),
     MyAdsTap(),
     SettingsTab(),
+
   ];
 
   get currentIndex => _currentIndex;

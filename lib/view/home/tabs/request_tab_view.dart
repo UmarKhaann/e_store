@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/repository/home_repo.dart';
+import 'package:e_store/utils/routes/routes_name.dart';
+import 'package:e_store/view_model/product_detail_model.dart';
 import 'package:flutter/material.dart';
 
 class RequestTabView extends StatelessWidget {
@@ -25,7 +27,8 @@ class RequestTabView extends StatelessWidget {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
               snapShot.data!.docs;
           if (!data['query'].isEmpty) {
-            docs = HomeRepo.searchProduct(docs, 'description',data['query'].toString());
+            docs = HomeRepo.searchProduct(
+                docs, 'description', data['query'].toString());
           }
           return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -61,7 +64,54 @@ class RequestTabView extends StatelessWidget {
                                                   fontSize: 16),
                                             ),
                                             TextButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10))),
+                                                    builder: (context) {
+                                                      return Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          ListTile(
+                                                            onTap: () => Navigator
+                                                                .pushNamed(
+                                                                    context,
+                                                                    RoutesName
+                                                                        .chatView,
+                                                                    arguments:
+                                                                        docs[reversedIndex]),
+                                                            title: const Text(
+                                                                'Chat'),
+                                                          ),
+                                                          ListTile(
+                                                            onTap: () => ProductDetailModel
+                                                                .launchTextMessage(
+                                                                    phone: docs[
+                                                                            reversedIndex]
+                                                                        [
+                                                                        'phone']),
+                                                            title: const Text(
+                                                                'SMS'),
+                                                          ),
+                                                          ListTile(
+                                                            onTap: () => ProductDetailModel
+                                                                .launchCall(
+                                                                    phone: docs[
+                                                                            reversedIndex]
+                                                                        [
+                                                                        'phone']),
+                                                            title: const Text(
+                                                                'Call'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
                                               style: ButtonStyle(
                                                   padding:
                                                       MaterialStateProperty.all(
@@ -81,7 +131,8 @@ class RequestTabView extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  if (docs[reversedIndex]['imageUrl'].isNotEmpty)
+                                  if (docs[reversedIndex]['imageUrl']
+                                      .isNotEmpty)
                                     ClipRRect(
                                       borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(10),
@@ -91,7 +142,9 @@ class RequestTabView extends StatelessWidget {
                                         width: double.infinity,
                                         height: height * .25,
                                         fit: BoxFit.cover,
-                                        imageUrl: docs[reversedIndex]['imageUrl'].toString(),
+                                        imageUrl: docs[reversedIndex]
+                                                ['imageUrl']
+                                            .toString(),
                                         progressIndicatorBuilder:
                                             (context, url, downloadProgress) =>
                                                 Center(

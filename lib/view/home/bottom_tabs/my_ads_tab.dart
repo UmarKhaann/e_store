@@ -6,8 +6,12 @@ class MyAdsTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Ads'),),
-      
+      appBar: AppBar(
+        title: const Text('Posts'),
+      ),
+      body: const Column(
+        children: [],
+      ),
     );
   }
 }

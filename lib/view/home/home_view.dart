@@ -30,9 +30,9 @@ class HomeView extends StatelessWidget {
               },
               tabs: const [
                 GButton(icon: Icons.home, text: "Home"),
-                GButton(icon: Icons.message, text: "Chats"),
+                GButton(icon: Icons.message, text: "Chat"),
                 GButton(icon: Icons.add, text: ""),
-                GButton(icon: Icons.stacked_bar_chart_rounded, text: "My Adds"),
+                GButton(icon: Icons.stacked_bar_chart_rounded, text: "Posts"),
                 GButton(icon: Icons.settings, text: "Settings"),
               ],
             ),
