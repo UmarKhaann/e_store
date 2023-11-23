@@ -10,7 +10,7 @@ class HomeRepo {
   static late Future<QuerySnapshot<Map<String, dynamic>>> sellingProducts;
   static late Future<QuerySnapshot<Map<String, dynamic>>> productsRequest;
   static late Stream<QuerySnapshot<Map<String, dynamic>>> conversations;
-  static late Future<QuerySnapshot<Map<String, dynamic>>> favoriteProducts;
+  static Future<QuerySnapshot<Map<String, dynamic>>>? favoriteProducts;
 
   static final currentUserUid = auth.currentUser!.uid;
   static final currentUserDoc =
@@ -24,7 +24,7 @@ class HomeRepo {
 
   static Future<QuerySnapshot<Map<String, dynamic>>> getFavorites(whereIn) {
     favoriteProducts = fireStore.collection('products').where('productId', whereIn: whereIn).get();
-    return favoriteProducts;
+    return favoriteProducts!;
   }
 
   static void searchProducts(context, query) async {

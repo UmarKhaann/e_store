@@ -1,4 +1,4 @@
-import 'package:e_store/provider/image_provider.dart';
+import 'package:e_store/provider/image_controller.dart';
 import 'package:e_store/provider/theme_provider.dart';
 import 'package:e_store/provider/voice_duration.dart';
 import 'package:e_store/res/components/theme.dart';
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     final User? currentUser = _auth.currentUser;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ImageProviderFromGallery()),
+        ChangeNotifierProvider(create: (_) => ImageController()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => VoiceDurationProvider()),
         ChangeNotifierProvider(create: (_) => HomeViewModel())

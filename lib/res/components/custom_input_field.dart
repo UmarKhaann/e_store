@@ -86,7 +86,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "field can't be empty!";
+                  return "${widget.hintText} can't be empty!";
                 }else if(widget.isPasswordField){
                   if(widget.password != widget.confirmPassword){
                     return "password didn't match!";

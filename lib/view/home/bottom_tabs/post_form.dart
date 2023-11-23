@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:e_store/provider/image_provider.dart';
+import 'package:e_store/provider/image_controller.dart';
 import 'package:e_store/repository/storage_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class PostForm extends StatefulWidget {
@@ -32,7 +33,7 @@ class _PostFormState extends State<PostForm> {
     final height = MediaQuery.of(context).size.height;
     // final width = MediaQuery.of(context).size.width;
     final provider =
-        Provider.of<ImageProviderFromGallery>(context, listen: false);
+        Provider.of<ImageController>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Details'),
@@ -135,14 +136,14 @@ class _PostFormState extends State<PostForm> {
                                 children: [
                                   ListTile(
                                     onTap: () {
-                                      provider.setImageFromCamera();
+                                      provider.setImage(imageSource: ImageSource.camera);
                                       Navigator.pop(context);
                                     },
                                     title: const Text('Take a photo'),
                                   ),
                                   ListTile(
                                     onTap: () {
-                                      provider.setImage();
+                                      provider.setImage(imageSource: ImageSource.gallery);
                                       Navigator.pop(context);
                                     },
                                     title: const Text('Pick from gallery'),
@@ -159,25 +160,25 @@ class _PostFormState extends State<PostForm> {
                               );
                             });
                       },
-                      child: Consumer<ImageProviderFromGallery>(
-                          builder: (context, imageProviderFromGallery, child) {
+                      child: Consumer<ImageController>(
+                          builder: (context, imageController, child) {
                         return Stack(
                           alignment: AlignmentDirectional.bottomCenter,
                           children: [
-                            imageProviderFromGallery.image != null
+                            imageController.image != null
                                 ? Image(
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                     height: height * .15,
                                     image: FileImage(File(
-                                        imageProviderFromGallery.image!.path)))
+                                        imageController.image!.path)))
                                 : Image(
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                     height: height * .15,
                                     image: const AssetImage(
                                         'assets/images/defaultImage.jpeg')),
-                            imageProviderFromGallery.image != null
+                            imageController.image != null
                                 ? const SizedBox()
                                 : const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

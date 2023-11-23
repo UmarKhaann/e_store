@@ -18,6 +18,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -39,66 +40,70 @@ class _LoginViewState extends State<LoginView> {
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Column(
-              children: [
-                Expanded(flex: 2, child: Container()),
-                CustomInputField(
-                  focusNode: _emailFocusNode,
-                  hintText: 'Email',
-                  icon: Icons.mail,
-                  controller: _emailController,
-                  keyboardInputType: TextInputType.emailAddress,
-                ),
-                CustomInputField(
-                    focusNode: _passwordFocusNode,
-                    hintText: 'Password',
-                    icon: Icons.lock,
-                    isPasswordField: true,
-                    controller: _passwordController),
-                const SizedBox(
-                  height: 20,
-                ),
-                CustomButton(
-                    text: 'LOGIN',
-                    isLoading: AuthRepo.logInBtnLoading.value,
-                    onPressed: () async {
-                      await AuthRepo.logInUser(
-                          context: context,
-                          email: _emailController.text,
-                          password: _passwordController.text);
-                    }),
-                TextButton(
-                  onPressed: () {
-                    
-                  },
-                  child: const Text(
-                    'forgot password?',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+            child: Form(
+              key: _formkey,
+              child: Column(
+                children: [
+                  Expanded(flex: 2, child: Container()),
+                  CustomInputField(
+                    focusNode: _emailFocusNode,
+                    hintText: 'Email',
+                    icon: Icons.mail,
+                    controller: _emailController,
+                    keyboardInputType: TextInputType.emailAddress,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
+                  CustomInputField(
+                      focusNode: _passwordFocusNode,
+                      hintText: 'Password',
+                      icon: Icons.lock,
+                      isPasswordField: true,
+                      controller: _passwordController),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                      text: 'LOGIN',
+                      isLoading: AuthRepo.btnLoading.value,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, RoutesName.signUpView);
-                      },
-                      child: const Text(
-                        'SIGNUP',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
-                Expanded(
-                  flex: _emailFocusNode.hasFocus || _passwordFocusNode.hasFocus
-                      ? 2
-                      : 1,
-                  child: Container(),
-                ),
-              ],
+                        if (_formkey.currentState!.validate()) {
+                          AuthRepo.logInUser(
+                              context: context,
+                              email: _emailController.text,
+                              password: _passwordController.text);
+                        }
+                      }),
+                  const TextButton(
+                    onPressed: null,
+                    child: Text(
+                      'forgot password?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text("Don't have an account?"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, RoutesName.signUpView);
+                        },
+                        child: const Text(
+                          'SIGNUP',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    flex:
+                        _emailFocusNode.hasFocus || _passwordFocusNode.hasFocus
+                            ? 2
+                            : 1,
+                    child: Container(),
+                  ),
+                ],
+              ),
             ),
           )
         ],

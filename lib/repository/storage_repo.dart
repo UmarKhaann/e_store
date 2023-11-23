@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/provider/image_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/image_provider.dart';
 import '../utils/utils.dart';
 
 class StorageRepo {
@@ -18,22 +18,19 @@ class StorageRepo {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static Future<String>? uploadItemToFirebaseStorage(
-      context, referencePath) async {
-    final provider =
-        Provider.of<ImageProviderFromGallery>(context, listen: false);
-    if (provider.image != null) {
-      final path = provider.image is XFile ? provider.image.path : provider.image;
-      if (provider.image is XFile) {
-        String fileName = basename(path);
-        Reference storageReference =
-            FirebaseStorage.instance.ref().child('$referencePath$fileName');
-        UploadTask uploadTask = storageReference.putFile(File(path));
-        final imageUrl = await storageReference.getDownloadURL();
-        await uploadTask;
-        return imageUrl;
-      }
-    }
-    return '';
+      context, referencePath, image) async {
+    String fileName = basename(image.path);
+
+    Reference storageReference =
+        FirebaseStorage.instance.ref().child('$referencePath$fileName');
+
+    final imageFile = File(image.path);
+    UploadTask uploadTask = storageReference.putFile(imageFile);
+
+    TaskSnapshot taskSnapshot = await uploadTask;
+    final imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+    return imageUrl;
   }
 
   static void uploadProductToFirebase(
@@ -45,7 +42,11 @@ class StorageRepo {
     final userId = _auth.currentUser!.uid.toString();
     btnUploadData.value = true;
 
-    String imageUrl = await uploadItemToFirebaseStorage(context, 'images/')!;
+    final XFile? image =
+        Provider.of<ImageController>(context, listen: false).image;
+
+    String imageUrl =
+        await uploadItemToFirebaseStorage(context, 'images/', image)!;
 
     final dateTime = DateTime.now().microsecondsSinceEpoch.toString();
     final newItem = _fireStore.collection('products').doc(dateTime);

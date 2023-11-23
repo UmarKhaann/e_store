@@ -16,8 +16,7 @@ class ProductDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
-    return SafeArea(
-      top: true,
+    return SafeArea(      
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(

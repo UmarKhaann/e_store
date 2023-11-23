@@ -1,4 +1,3 @@
-import 'package:e_store/provider/image_provider.dart';
 import 'package:e_store/provider/theme_provider.dart';
 import 'package:e_store/res/components/custom_alert_box.dart';
 import 'package:e_store/shared_preference/dark_theme_data.dart';
@@ -22,10 +21,7 @@ class SettingsTab extends StatelessWidget {
       body: Column(
         children: [
           ListTile(
-            onTap: (){
-              final value = Provider.of<ImageProviderFromGallery>(context, listen: false);
-              final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-                  value.assignImage(homeViewModel.userData.data()!['profileImage']);
+            onTap: () {
               Navigator.pushNamed(context, RoutesName.profileView);
             },
             leading: const Icon(Icons.person),
@@ -35,11 +31,12 @@ class SettingsTab extends StatelessWidget {
               builder: (context, themeChangerProvider, child) {
             return SwitchListTile(
                 thumbIcon: MaterialStateProperty.all(Icon(
-                    themeChangerProvider.isDarkTheme
-                        ? Icons.dark_mode
-                        : Icons.light_mode, color: Colors.black,)),
-                thumbColor:
-                    MaterialStateProperty.all(Colors.white),
+                  themeChangerProvider.isDarkTheme
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                  color: Colors.black,
+                )),
+                thumbColor: MaterialStateProperty.all(Colors.white),
                 title: Row(
                   children: [
                     Icon(themeChangerProvider.isDarkTheme
@@ -70,11 +67,17 @@ class SettingsTab extends StatelessWidget {
                         title: 'Log Out',
                         content: 'Are you sure you want to log out?',
                         yesOnPressed: () async {
-                          _auth.signOut().then((value) =>
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  RoutesName.loginView, (route) => false));
-                          Utils.snackBarMessage(
-                              context, 'Logged Out Successfully');
+                          await _auth.signOut().then((value) {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                RoutesName.loginView, (route) => false);
+
+                            Utils.snackBarMessage(
+                                context, 'Logged Out Successfully');
+                            final homeViewModel = Provider.of<HomeViewModel>(
+                                context,
+                                listen: false);
+                            homeViewModel.setCurrentIndex(0);
+                          });
                         },
                         noOnPressed: () {
                           Navigator.pop(context);

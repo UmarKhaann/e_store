@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:e_store/provider/image_provider.dart';
+import 'package:e_store/provider/image_controller.dart';
 import 'package:e_store/repository/auth_repo.dart';
 import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_button.dart';
@@ -55,170 +55,165 @@ class _AccountViewState extends State<AccountView> {
     super.dispose();
   }
 
-  updateUserData(image) async {
-    if (formkey.currentState!.validate()) {
-      await AuthRepo.updateUserInfo(
-        context: context,
-        profileImage: image is XFile ? image.path : image,
-        name: nameController.text,
-        email: emailController.text,
-        phone: phoneController.text,
-        password: passwordController.text,
-      );
-      HomeRepo.getUserData(context);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final String? image = HomeRepo.auth.currentUser!.photoURL;
     return Scaffold(
       appBar: AppBar(title: const Text('Account')),
       body: SingleChildScrollView(
-        child: Consumer<ImageProviderFromGallery>(
-          builder: (context, imageProviderFromgallery, child) {
-            final bool hasProfileImage = imageProviderFromgallery.image == null;
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Form(
-                key: formkey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            builder: (context) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    onTap: () {
-                                      imageProviderFromgallery
-                                          .setImageFromCamera();
-                                      Navigator.pop(context);
-                                    },
-                                    title: const Text('Take a photo'),
-                                  ),
-                                  ListTile(
-                                    onTap: () {
-                                      imageProviderFromgallery.setImage();
-                                      Navigator.pop(context);
-                                    },
-                                    title: const Text('Pick from gallery'),
-                                  ),
-                                  ListTile(
-                                    onTap: () {},
-                                    title: const Text('Remove photo'),
-                                  ),
-                                  ListTile(
-                                    onTap: () => Navigator.pop(context),
-                                    title: const Text('Cancel'),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: imageProviderFromgallery.image is XFile
-                          ? CircleAvatar(
-                              radius: 70,
-                              backgroundColor: Theme.of(context).cardColor,
-                              backgroundImage: FileImage(File(
-                                  '${imageProviderFromgallery.image.path}')),
-                              child: hasProfileImage
-                                  ? const Text('Add image')
-                                  : null,
-                            )
-                          : CircleAvatar(
-                              radius: 70,
-                              backgroundColor: Theme.of(context).cardColor,
-                              backgroundImage:
-                                  NetworkImage(imageProviderFromgallery.image),
-                              child: hasProfileImage
-                                  ? const Text('Add image')
-                                  : null,
-                            ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(' Username'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: userNameController,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                    ),
-                    const Text(' Enter your name'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: nameController,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                    ),
-                    const Text(' Email'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: emailController,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                    ),
-                    const Text(' Phone'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: phoneController,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                    ),
-                    const Text(' Password'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: passwordController,
-                      isPasswordField: true,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                      password: passwordController.text,
-                      confirmPassword: confirmPasswordController.text,
-                    ),
-                    const Text(' Confirm password'),
-                    CustomInputField(
-                      hintText: '',
-                      controller: confirmPasswordController,
-                      isPasswordField: true,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      onChanged: (value) {
-                        formkey.currentState!.validate();
-                      },
-                      password: passwordController.text,
-                      confirmPassword: confirmPasswordController.text,
-                    ),
-                    CustomButton(
-                        text: 'Save',
-                        isLoading: AuthRepo.updateBtnLoading.value,
-                        onPressed: () {
-                          updateUserData(imageProviderFromgallery.image);
-                        }),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Form(
+            key: formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        builder: (context) {
+                          final imageController = Provider.of<ImageController>(
+                              context,
+                              listen: false);
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  imageController.setImage(
+                                      imageSource: ImageSource.camera);
+                                  Navigator.pop(context);
+                                },
+                                title: const Text('Take a photo'),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  imageController.setImage(
+                                      imageSource: ImageSource.gallery);
+                                  Navigator.pop(context);
+                                },
+                                title: const Text('Pick from gallery'),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  AuthRepo.removeProfileImage(context);
+                                  Navigator.pop(context);
+                                },
+                                title: const Text('Remove photo'),
+                              ),
+                              ListTile(
+                                onTap: () => Navigator.pop(context),
+                                title: const Text('Cancel'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Consumer<ImageController>(
+                    builder: (context, imageController, child) {
+                      return CircleAvatar(
+                        radius: 70,
+                        backgroundColor: Theme.of(context).cardColor,
+                        backgroundImage: imageController.image != null
+                            ? FileImage(File(imageController.image.path))
+                            : image == null
+                                ? null
+                                : NetworkImage(image) as ImageProvider,
+                        child: image == null && imageController.image == null
+                            ? const Text('Add image')
+                            : null,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
-          },
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(' Username'),
+                CustomInputField(
+                  hintText: '',
+                  controller: userNameController,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                ),
+                const Text(' Enter your name'),
+                CustomInputField(
+                  hintText: '',
+                  controller: nameController,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                ),
+                const Text(' Email'),
+                CustomInputField(
+                  hintText: '',
+                  controller: emailController,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                ),
+                const Text(' Phone'),
+                CustomInputField(
+                  hintText: '',
+                  controller: phoneController,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                ),
+                const Text(' Password'),
+                CustomInputField(
+                  hintText: '',
+                  controller: passwordController,
+                  isPasswordField: true,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                  password: passwordController.text,
+                  confirmPassword: confirmPasswordController.text,
+                ),
+                const Text(' Confirm password'),
+                CustomInputField(
+                  hintText: '',
+                  controller: confirmPasswordController,
+                  isPasswordField: true,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  onChanged: (value) {
+                    formkey.currentState!.validate();
+                  },
+                  password: passwordController.text,
+                  confirmPassword: confirmPasswordController.text,
+                ),
+                CustomButton(
+                    text: 'Save',
+                    isLoading: AuthRepo.btnLoading.value,
+                    onPressed: () {
+                      if (formkey.currentState!.validate()) {
+                        AuthRepo.updateUserInfo(
+                          context: context,
+                          name: nameController.text,
+                          email: emailController.text,
+                          phone: phoneController.text,
+                          password: passwordController.text,
+                        );
+                        HomeRepo.getUserData(context);
+                      }
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

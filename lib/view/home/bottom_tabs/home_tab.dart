@@ -1,4 +1,4 @@
-import 'package:e_store/provider/image_provider.dart';
+import 'package:e_store/provider/image_controller.dart';
 import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
@@ -33,35 +33,25 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
+    final String? image = HomeRepo.auth.currentUser!.photoURL;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
         titleSpacing: 0,
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Consumer<HomeViewModel>(
-            builder: (context, homeViewModel, child) {
-              final bool hasProfileImage = homeViewModel.userData.data()!['profileImage'].isEmpty;
-              return InkWell(
-                onTap: (){
-                  final value = Provider.of<ImageProviderFromGallery>(context, listen: false);
-                  value.assignImage(homeViewModel.userData.data()!['profileImage']);
-                  Navigator.pushNamed(context, RoutesName.profileView);
-
-                },
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).cardColor,
-                  backgroundImage: hasProfileImage
-                      ? null
-                      : NetworkImage('${homeViewModel.userData.data()!['profileImage']}'),
-                  child: hasProfileImage
-                      ? const Icon(
-                          Icons.person,
-                        )
-                      : null,
-                ),
-              );
+          child: InkWell(
+            onTap: () {
+              final provider =
+                  Provider.of<ImageController>(context, listen: false);
+              provider.resetImage();
+              Navigator.pushNamed(context, RoutesName.profileView);
             },
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).cardColor,
+              backgroundImage: image == null ? null : NetworkImage(image),
+              child: image == null ? const Icon(Icons.person) : null,
+            ),
           ),
         ),
         title: CustomInputField(
@@ -78,8 +68,10 @@ class _HomeTabState extends State<HomeTab> {
           IconButton(
             onPressed: () {
               HomeRepo.getIdsOfFavorites().then((value) {
-                if(value.isNotEmpty){
+                if (value.isNotEmpty) {
                   HomeRepo.getFavorites(value);
+                } else {
+                  HomeRepo.favoriteProducts = null;
                 }
                 Navigator.pushNamed(context, RoutesName.favoritesView);
               });
