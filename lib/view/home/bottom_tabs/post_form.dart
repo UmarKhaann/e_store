@@ -18,7 +18,7 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final ValueNotifier<bool> isRequest = ValueNotifier(false);
+  
 
   @override
   void dispose() {
@@ -31,9 +31,7 @@ class _PostFormState extends State<PostForm> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    // final width = MediaQuery.of(context).size.width;
-    final provider =
-        Provider.of<ImageController>(context, listen: false);
+    final provider = Provider.of<ImageController>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Details'),
@@ -45,7 +43,7 @@ class _PostFormState extends State<PostForm> {
                   title: _titleController.text,
                   price: _priceController.text,
                   description: _descriptionController.text,
-                  isSellingProduct: isRequest);
+                  isSellingProduct: false);
             },
             child: const Text('Post'),
           ),
@@ -54,172 +52,162 @@ class _PostFormState extends State<PostForm> {
           ),
         ],
       ),
-      body: ValueListenableBuilder(
-          valueListenable: isRequest,
-          builder: (context, isRequestValue, child) {
-            return Padding(
+      body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  const Text(
-                      'Is it a product for sale or request for a product?'),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            if (isRequest.value) {
-                              isRequest.value = !isRequest.value;
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: isRequest.value
-                                  ? null
-                                  : Border.all(
-                                      color: Theme.of(context).canvasColor,
-                                    ),
-                            ),
-                            child: const Text('Product'),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            if (!isRequest.value) {
-                              isRequest.value = !isRequest.value;
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: isRequest.value
-                                  ? Border.all(
-                                      color: Theme.of(context).canvasColor)
-                                  : null,
-                            ),
-                            child: const Text('Request'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                      height: 10,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(),
+                    const Text(
+                        'Is it a product for sale or request for a product?'),
+                    const SizedBox(
+                      height: 5,
                     ),
-                  const Divider(),
-                  if (!isRequest.value) ...[
-                    const Text('Upto 3 Photos are allowed'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                        color: Theme.of(context).canvasColor,
+                                      ),
+                              ),
+                              child: const Text('Product'),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              // if (!isRequest.value) {
+                              //   isRequest.value = !isRequest.value;
+                              // }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: const Text('Request'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    InkWell(
-                      onTap: () async {
-                        showModalBottomSheet(
-                            context: context,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            builder: (context) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    onTap: () {
-                                      provider.setImage(imageSource: ImageSource.camera);
-                                      Navigator.pop(context);
-                                    },
-                                    title: const Text('Take a photo'),
-                                  ),
-                                  ListTile(
-                                    onTap: () {
-                                      provider.setImage(imageSource: ImageSource.gallery);
-                                      Navigator.pop(context);
-                                    },
-                                    title: const Text('Pick from gallery'),
-                                  ),
-                                  ListTile(
-                                    onTap: () {},
-                                    title: const Text('Remove photo'),
-                                  ),
-                                  ListTile(
-                                    onTap: () => Navigator.pop(context),
-                                    title: const Text('Cancel'),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: Consumer<ImageController>(
-                          builder: (context, imageController, child) {
-                        return Stack(
-                          alignment: AlignmentDirectional.bottomCenter,
-                          children: [
-                            imageController.image != null
-                                ? Image(
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    height: height * .15,
-                                    image: FileImage(File(
-                                        imageController.image!.path)))
-                                : Image(
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    height: height * .15,
-                                    image: const AssetImage(
-                                        'assets/images/defaultImage.jpeg')),
-                            imageController.image != null
-                                ? const SizedBox()
-                                : const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.add,
-                                        color: Colors.black,
-                                      ),
-                                      Text(
-                                        'Add Images',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  )
-                          ],
-                        );
-                      }),
-                    ),
                     const Divider(),
-                  ],
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  if (!isRequest.value)
+                    
+                      const Text('Upto 3 Photos are allowed'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          showModalBottomSheet(
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        provider.setImage(
+                                            imageSource: ImageSource.camera);
+                                        Navigator.pop(context);
+                                      },
+                                      title: const Text('Take a photo'),
+                                    ),
+                                    ListTile(
+                                      onTap: () {
+                                        provider.setImage(
+                                            imageSource: ImageSource.gallery);
+                                        Navigator.pop(context);
+                                      },
+                                      title: const Text('Pick from gallery'),
+                                    ),
+                                    ListTile(
+                                      onTap: () {},
+                                      title: const Text('Remove photo'),
+                                    ),
+                                    ListTile(
+                                      onTap: () => Navigator.pop(context),
+                                      title: const Text('Cancel'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Consumer<ImageController>(
+                            builder: (context, imageController, child) {
+                          return Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: [
+                              imageController.image != null
+                                  ? Image(
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      height: height * .15,
+                                      image: FileImage(
+                                          File(imageController.image!.path)))
+                                  : Image(
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      height: height * .15,
+                                      image: const AssetImage(
+                                          'assets/images/defaultImage.jpeg')),
+                              imageController.image != null
+                                  ? const SizedBox()
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          'Add Images',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    )
+                            ],
+                          );
+                        }),
+                      ),
+                      const Divider(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     CustomInputField(
                         hintText: 'Title *', controller: _titleController),
-                  CustomInputField(
-                      hintText: 'Price *',
-                      controller: _priceController,
-                      keyboardInputType: TextInputType.phone),
-                  CustomInputField(
-                    hintText: 'Description *',
-                    controller: _descriptionController,
-                    maxLines: 6,
-                  ),
-                ],
+                    CustomInputField(
+                        hintText: 'Price *',
+                        controller: _priceController,
+                        keyboardInputType: TextInputType.phone),
+                    CustomInputField(
+                      hintText: 'Description *',
+                      controller: _descriptionController,
+                      maxLines: 6,
+                    ),
+                  ],
+                ),
               ),
-            );
-          }),
+            ),
     );
   }
 }

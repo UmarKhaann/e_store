@@ -112,10 +112,7 @@ class RequestTabView extends StatelessWidget {
                                                       );
                                                     });
                                               },
-                                              style: ButtonStyle(
-                                                  padding:
-                                                      MaterialStateProperty.all(
-                                                          EdgeInsets.zero)),
+
                                               child: const Text("Get in touch"),
                                             )
                                           ],

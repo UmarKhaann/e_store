@@ -16,7 +16,7 @@ class HomeViewModel with ChangeNotifier {
     const HomeTab(),
     const ConversationsTab(),
     const PostForm(),
-    const MyAdsTap(),
+    const MyPostsTab(),
     SettingsTab(),
   ];
 

@@ -19,18 +19,22 @@ class StorageRepo {
 
   static Future<String>? uploadItemToFirebaseStorage(
       context, referencePath, image) async {
-    String fileName = basename(image.path);
+    if (image == null) {
+      return '';
+    } else {
+      String fileName = basename(image.path);
 
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('$referencePath$fileName');
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('$referencePath$fileName');
 
-    final imageFile = File(image.path);
-    UploadTask uploadTask = storageReference.putFile(imageFile);
+      final imageFile = File(image.path);
+      UploadTask uploadTask = storageReference.putFile(imageFile);
 
-    TaskSnapshot taskSnapshot = await uploadTask;
-    final imageUrl = await taskSnapshot.ref.getDownloadURL();
+      TaskSnapshot taskSnapshot = await uploadTask;
+      final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
-    return imageUrl;
+      return imageUrl;
+    }
   }
 
   static void uploadProductToFirebase(

@@ -1,14 +1,35 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_store/repository/home_repo.dart';
-import 'package:e_store/res/components/favorite_button.dart';
+import 'package:e_store/res/components/custom_card.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
-class FavoritesView extends StatelessWidget {
+class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
 
   @override
+  State<FavoritesView> createState() => _FavoritesViewState();
+}
+
+class _FavoritesViewState extends State<FavoritesView> {
+  @override
+  void initState() {
+    setFavorite();
+    super.initState();
+  }
+
+  setFavorite() {
+    HomeRepo.getIdsOfFavorites().then((value) {
+      if (value.isNotEmpty) {
+        HomeRepo.getFavorites(value);
+      } else {
+        HomeRepo.favoriteProducts = null;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final _height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorites'),
@@ -33,87 +54,29 @@ class FavoritesView extends StatelessWidget {
                     return const Text("There isn't any Favorite");
                   } else {
                     return Expanded(
-                      child: ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final data = snapshot.data!.docs[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Card(
-                                margin: EdgeInsets.zero,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RoutesName.productDetailView,
-                                        arguments: data);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.horizontal(
-                                                  left: Radius.circular(10)),
-                                          child: Hero(
-                                            tag: data['imageUrl'],
-                                            child: CachedNetworkImage(
-                                              height: 100,
-                                              width: 100,
-                                              imageUrl: data['imageUrl'],
-                                              fit: BoxFit.cover,
-                                              progressIndicatorBuilder: (context,
-                                                      url, downloadProgress) =>
-                                                  Center(
-                                                      child: CircularProgressIndicator(
-                                                          value:
-                                                              downloadProgress
-                                                                  .progress)),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Icon(Icons.error),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: SizedBox(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    '${data['price']} Rs',
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  FavoriteButton(
-                                                      productId:
-                                                          data['productId'])
-                                                ],
-                                              ),
-                                              Text(data['title']),
-                                              Text(data['time']),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
+                      child: SizedBox(
+                        child: RefreshIndicator(
+                          color: Theme.of(context).iconTheme.color,
+                          onRefresh: () => setFavorite(),
+                          child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      childAspectRatio: 3 / 3.8,
+                                      mainAxisSpacing: 10),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return CustomCard(
+                                    docs: snapshot.data!.docs[index],
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, RoutesName.productDetailView,
+                                          arguments: snapshot.data!.docs[index]);
+                                    });
+                              }),
+                        ),
+                      ),
                     );
                   }
                 },

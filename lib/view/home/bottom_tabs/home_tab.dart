@@ -67,14 +67,7 @@ class _HomeTabState extends State<HomeTab> {
         actions: [
           IconButton(
             onPressed: () {
-              HomeRepo.getIdsOfFavorites().then((value) {
-                if (value.isNotEmpty) {
-                  HomeRepo.getFavorites(value);
-                } else {
-                  HomeRepo.favoriteProducts = null;
-                }
-                Navigator.pushNamed(context, RoutesName.favoritesView);
-              });
+              Navigator.pushNamed(context, RoutesName.favoritesView);
             },
             icon: const Icon(Icons.favorite_rounded),
             padding: EdgeInsets.zero,
