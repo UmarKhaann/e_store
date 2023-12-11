@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_store/repository/auth_repo.dart';
+import 'package:e_store/repository/posts_repo.dart';
+import 'package:e_store/res/components/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 
 class MyPostsTab extends StatefulWidget {
@@ -14,21 +15,12 @@ class _MyPostsTabState extends State<MyPostsTab> {
   static Future<QuerySnapshot<Map<String, dynamic>>>? posts;
   @override
   void initState() {
-    getPosts();
+    PostsRepo.getPosts();
     super.initState();
-  }
-
-  getPosts() {
-    final uid = AuthRepo.currentUserUid;
-    posts = FirebaseFirestore.instance
-        .collection('products')
-        .where('uid', isEqualTo: uid)
-        .get();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Posts'),
@@ -100,12 +92,27 @@ class _MyPostsTabState extends State<MyPostsTab> {
                           ),
                           trailing: PopupMenuButton(
                               itemBuilder: (BuildContext contetxt) {
-                            return const [
-                              PopupMenuItem(
+                            return [
+                              const PopupMenuItem(
                                 child: Text("Edit"),
                               ),
                               PopupMenuItem(
-                                child: Text("Delete"),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomAlertDialog(
+                                        buttonTitle: "Yes",
+                                        onPressed: () async {
+                                          await PostsRepo.deletePost(
+                                              data['productId']);
+                                          PostsRepo.getPosts();
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Text("Delete"),
                               ),
                             ];
                           }),

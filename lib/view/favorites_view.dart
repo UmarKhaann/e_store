@@ -29,7 +29,6 @@ class _FavoritesViewState extends State<FavoritesView> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorites'),
@@ -54,33 +53,31 @@ class _FavoritesViewState extends State<FavoritesView> {
                     return const Text("There isn't any Favorite");
                   } else {
                     return Expanded(
-                      child: SizedBox(
-                        child: RefreshIndicator(
-                          color: Theme.of(context).iconTheme.color,
-                          onRefresh: () => setFavorite(),
-                          child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 10,
-                                      childAspectRatio: 3 / 3.8,
-                                      mainAxisSpacing: 10),
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return CustomCard(
-                                    docs: snapshot.data!.docs[index],
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, RoutesName.productDetailView,
-                                          arguments: snapshot.data!.docs[index]);
-                                    });
-                              }),
-                        ),
+                      child: RefreshIndicator(
+                        color: Theme.of(context).iconTheme.color,
+                        onRefresh: () => setFavorite(),
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    childAspectRatio: 3 / 3.8,
+                                    mainAxisSpacing: 10),
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return CustomCard(
+                                  docs: snapshot.data!.docs[index],
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, RoutesName.productDetailView,
+                                        arguments: snapshot.data!.docs[index]);
+                                  });
+                            }),
                       ),
                     );
                   }
                 },
-              ),
+              )
           ],
         ),
       ),

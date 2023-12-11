@@ -1,5 +1,5 @@
 import 'package:e_store/provider/theme_provider.dart';
-import 'package:e_store/res/components/custom_alert_box.dart';
+import 'package:e_store/res/components/custom_alert_dialog.dart';
 import 'package:e_store/shared_preference/dark_theme_data.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/utils/utils.dart';
@@ -63,10 +63,8 @@ class SettingsTab extends StatelessWidget {
             onTap: () {
               showDialog(
                   context: context,
-                  builder: (_) => CustomAlertBox(
-                        title: 'Log Out',
-                        content: 'Are you sure you want to log out?',
-                        yesOnPressed: () async {
+                  builder: (_) => CustomAlertDialog(
+                    onPressed: () async {
                           await _auth.signOut().then((value) {
                             Navigator.pushNamedAndRemoveUntil(context,
                                 RoutesName.loginView, (route) => false);
@@ -79,10 +77,8 @@ class SettingsTab extends StatelessWidget {
                             homeViewModel.setCurrentIndex(0);
                           });
                         },
-                        noOnPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ));
+                  buttonTitle: 'Yes',
+                  ));
             },
           ),
         ],
