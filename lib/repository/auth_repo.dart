@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/provider/image_controller.dart';
+import 'package:e_store/repository/notifications_repo.dart';
 import 'package:e_store/repository/storage_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class AuthRepo {
   static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final currentUserUid = _auth.currentUser!.uid;
+  static NotificationRepo repo = NotificationRepo();
 
   static signOutUser() {
     _auth.signOut();
@@ -50,20 +52,22 @@ class AuthRepo {
             .collection('usernames')
             .doc(username)
             .set({'username': username});
-
-        newUser.set({
-          'profileImage': profileImage.toString(),
-          'username': username,
-          'fullName': fullName,
-          'email': email,
-          'phone': phone,
-          'password': password,
-          'favorites': favorites
-        }).then((value) async {
-          await setUserDetails();
-          btnLoading.value = false;
-          Navigator.pushReplacementNamed(context, RoutesName.homeView);
-          Utils.snackBarMessage(context, 'User Signed Up Successfully!');
+        repo.getDeviceToken().then((deviceToken) {
+          newUser.set({
+            'profileImage': profileImage.toString(),
+            'username': username,
+            'fullName': fullName,
+            'email': email,
+            'phone': phone,
+            'password': password,
+            'favorites': favorites,
+            'fcmToken': deviceToken,
+          }).then((value) async {
+            await setUserDetails();
+            btnLoading.value = false;
+            Navigator.pushReplacementNamed(context, RoutesName.homeView);
+            Utils.snackBarMessage(context, 'User Signed Up Successfully!');
+          });
         });
       }).catchError((error, stackTrace) {
         btnLoading.value = false;
@@ -78,6 +82,15 @@ class AuthRepo {
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) async {
       await setUserDetails();
+
+      repo.getDeviceToken().then((deviceToken) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUserUid)
+            .update({
+          'fcmToken': deviceToken,
+        });
+      });
       btnLoading.value = false;
       Navigator.pushReplacementNamed(context, RoutesName.homeView);
       Utils.snackBarMessage(context, "User Logged In Successfully!");
@@ -106,7 +119,7 @@ class AuthRepo {
 
     if (_auth.currentUser!.photoURL != null && profileImageUrl.isNotEmpty) {
       print('i am here');
-    //delete image from firebase storage using it's url
+      //delete image from firebase storage using it's url
     }
 
     if (profileImageUrl.isEmpty) {

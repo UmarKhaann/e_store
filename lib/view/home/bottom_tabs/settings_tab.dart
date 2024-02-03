@@ -64,7 +64,9 @@ class SettingsTab extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (_) => CustomAlertDialog(
-                    onPressed: () async {
+                        title: 'Log out?',
+                        content: 'Are you sure you want to Log out?',
+                        onPressed: () async {
                           await _auth.signOut().then((value) {
                             Navigator.pushNamedAndRemoveUntil(context,
                                 RoutesName.loginView, (route) => false);
@@ -77,8 +79,8 @@ class SettingsTab extends StatelessWidget {
                             homeViewModel.setCurrentIndex(0);
                           });
                         },
-                  buttonTitle: 'Yes',
-                  ));
+                        buttonTitle: 'Yes',
+                      ));
             },
           ),
         ],

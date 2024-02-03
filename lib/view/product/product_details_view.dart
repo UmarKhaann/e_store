@@ -16,7 +16,7 @@ class ProductDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
-    return SafeArea(      
+    return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -76,8 +76,8 @@ class ProductDetailsView extends StatelessWidget {
                               ),
                               Text(
                                 docs['time'],
-                                style:
-                                    const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -104,6 +104,15 @@ class ProductDetailsView extends StatelessWidget {
                 ),
               ),
             ),
+            if (docs['uid'] == _auth.currentUser!.uid)
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomButton(
+                  width: width * .9,
+                  text: 'Edit',
+                  onPressed: () {},
+                ),
+              ),
             if (docs['uid'] != _auth.currentUser!.uid)
               Padding(
                 padding: const EdgeInsets.all(10.0),

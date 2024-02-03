@@ -6,4 +6,6 @@ class RoutesName{
   static const String chatView = 'chat_view';
   static const String favoritesView = 'favorites_view';
   static const String profileView = 'profile_view';
+  static const String splashView = 'splash_view';
+  static const String notificationView = 'notification_view';
   }

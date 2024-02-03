@@ -1,4 +1,3 @@
-import 'package:e_store/provider/image_controller.dart';
 import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
@@ -19,13 +18,6 @@ class _HomeTabState extends State<HomeTab> {
   final TextEditingController searchController = TextEditingController();
 
   @override
-  void initState() {
-    HomeRepo.getUserData(context);
-    HomeRepo.getPosts(context);
-    super.initState();
-  }
-
-  @override
   void dispose() {
     searchController.dispose();
     super.dispose();
@@ -36,17 +28,14 @@ class _HomeTabState extends State<HomeTab> {
     final String? image = HomeRepo.auth.currentUser!.photoURL;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 80,
+        toolbarHeight: 70,
         titleSpacing: 0,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: InkWell(
-            onTap: () {
-              final provider =
-                  Provider.of<ImageController>(context, listen: false);
-              provider.resetImage();
-              Navigator.pushNamed(context, RoutesName.profileView);
-            },
+        leading: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, RoutesName.profileView);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: CircleAvatar(
               backgroundColor: Theme.of(context).cardColor,
               backgroundImage: image == null ? null : NetworkImage(image),

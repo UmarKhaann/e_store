@@ -3,7 +3,9 @@ import 'package:e_store/view/account.dart';
 import 'package:e_store/view/auth/login_view.dart';
 import 'package:e_store/view/auth/singup_view.dart';
 import 'package:e_store/view/favorites_view.dart';
+import 'package:e_store/view/notification_view.dart';
 import 'package:e_store/view/product/product_details_view.dart';
+import 'package:e_store/view/splash.dart';
 import 'package:flutter/material.dart';
 
 import '../../view/chat/chat_view.dart';
@@ -31,6 +33,10 @@ class Routes {
         return MaterialPageRoute(builder: (_) => FavoritesView());
       case RoutesName.profileView:
         return MaterialPageRoute(builder: (_) => AccountView());
+      case RoutesName.splashView:
+        return MaterialPageRoute(builder: (_) => SplashView());
+      case RoutesName.notificationView:
+        return MaterialPageRoute(builder: (_) => NotificationView());
 
       default:
         return MaterialPageRoute(builder: (_) {

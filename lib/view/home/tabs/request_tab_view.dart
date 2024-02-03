@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/repository/auth_repo.dart';
 import 'package:e_store/repository/home_repo.dart';
-import 'package:e_store/utils/routes/routes_name.dart';
-import 'package:e_store/view_model/product_detail_model.dart';
+import 'package:e_store/res/components/bottomsheet.dart';
 import 'package:flutter/material.dart';
 
 class RequestTabView extends StatelessWidget {
@@ -44,7 +44,6 @@ class RequestTabView extends StatelessWidget {
                             final reversedIndex = (docs.length - 1) - index;
                             return Card(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -63,53 +62,15 @@ class RequestTabView extends StatelessWidget {
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16),
                                             ),
+                                            if(AuthRepo.currentUserUid == docs[reversedIndex]['uid'])
+                                            TextButton(onPressed: (){}, child: const Text('Edit')),
+                                            if(AuthRepo.currentUserUid != docs[reversedIndex]['uid'])
                                             TextButton(
                                               onPressed: () {
                                                 showModalBottomSheet(
                                                     context: context,
-                                                    shape: const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    10))),
                                                     builder: (context) {
-                                                      return Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          ListTile(
-                                                            onTap: () => Navigator
-                                                                .pushNamed(
-                                                                    context,
-                                                                    RoutesName
-                                                                        .chatView,
-                                                                    arguments:
-                                                                        docs[reversedIndex]),
-                                                            title: const Text(
-                                                                'Chat'),
-                                                          ),
-                                                          ListTile(
-                                                            onTap: () => ProductDetailModel
-                                                                .launchTextMessage(
-                                                                    phone: docs[
-                                                                            reversedIndex]
-                                                                        [
-                                                                        'phone']),
-                                                            title: const Text(
-                                                                'SMS'),
-                                                          ),
-                                                          ListTile(
-                                                            onTap: () => ProductDetailModel
-                                                                .launchCall(
-                                                                    phone: docs[
-                                                                            reversedIndex]
-                                                                        [
-                                                                        'phone']),
-                                                            title: const Text(
-                                                                'Call'),
-                                                          ),
-                                                        ],
-                                                      );
+                                                      return ActionBottomSheet(docs: docs[reversedIndex],);
                                                     });
                                               },
 
@@ -122,7 +83,7 @@ class RequestTabView extends StatelessWidget {
                                           style: const TextStyle(
                                               color: Colors.grey, fontSize: 13),
                                         ),
-                                        SizedBox(height: height * .01),
+                                        
                                         Text(
                                             "${docs[reversedIndex]['description']} for ${docs[reversedIndex]['price']}\$"),
                                       ],

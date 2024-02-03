@@ -40,10 +40,11 @@ class _ConversationsTabState extends State<ConversationsTab> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Messages'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: CustomInputField(
               padding: EdgeInsets.zero,
               icon: Icons.search,
@@ -54,17 +55,12 @@ class _ConversationsTabState extends State<ConversationsTab> {
               },
             ),
           ),
-        ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
           StreamBuilder(
               stream: HomeRepo.conversations,
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Expanded(child: Center(child: CircularProgressIndicator()));
                 } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Expanded(
                       child: Center(
@@ -80,7 +76,7 @@ class _ConversationsTabState extends State<ConversationsTab> {
                         HomeRepo.sort(docs, homeViewModel.query);
                       }
                       return docs.isEmpty
-                          ? const Center(child: Text('Nothing Found!'))
+                          ? const Expanded(child: Center(child: Text('Nothing Found!')))
                           : Expanded(
                               child: ListView.builder(
                                   padding: EdgeInsets.zero,

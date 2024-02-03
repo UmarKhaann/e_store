@@ -6,10 +6,10 @@ class PostsRepo {
     FirebaseFirestore.instance.collection('products').doc(productId).delete();
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>>? getPosts() async {
-    return await FirebaseFirestore.instance
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getPosts() {
+    return FirebaseFirestore.instance
         .collection('products')
         .where('uid', isEqualTo: AuthRepo.currentUserUid)
-        .get();
+        .snapshots();
   }
 }

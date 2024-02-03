@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/provider/voice_duration.dart';
+import 'package:e_store/repository/notifications_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import '../res/components/custom_button.dart';
 
 class ChatModel {
@@ -33,25 +36,27 @@ class ChatModel {
     return audioPath;
   }
 
-  static Future playVoiceMessage(context,
-      String fileUrl, VoidCallback whenFinished) async {
+  static Future playVoiceMessage(
+      context, String fileUrl, VoidCallback whenFinished) async {
     await player
         .startPlayer(fromURI: fileUrl, whenFinished: whenFinished)
         .then((value) {
-          final voiceProvider = Provider.of<VoiceDurationProvider>(context, listen: false);
-          voiceProvider.setVoiceDuration(value!.inSeconds);
-          timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-            if(voiceProvider.voiceDuration > voiceProvider.position){
-              voiceProvider.setPosition();
-            }else{
-              timer.cancel();
-            }
-          });
+      final voiceProvider =
+          Provider.of<VoiceDurationProvider>(context, listen: false);
+      voiceProvider.setVoiceDuration(value!.inSeconds);
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (voiceProvider.voiceDuration > voiceProvider.position) {
+          voiceProvider.setPosition();
+        } else {
+          timer.cancel();
+        }
+      });
     });
   }
 
   static Future stopVoiceMessage(context) async {
-    final durationProvider = Provider.of<VoiceDurationProvider>(context, listen: false);
+    final durationProvider =
+        Provider.of<VoiceDurationProvider>(context, listen: false);
     durationProvider.setVoiceDuration(0);
     durationProvider.resetPosition();
     timer!.cancel();
@@ -59,7 +64,9 @@ class ChatModel {
   }
 
   static Future toggleVoiceMessage(
-      {required BuildContext context, required String fileUrl, required VoidCallback whenFinished}) async {
+      {required BuildContext context,
+      required String fileUrl,
+      required VoidCallback whenFinished}) async {
     if (player.isPlaying) {
       await stopVoiceMessage(context);
     } else {
@@ -103,6 +110,14 @@ class ChatModel {
     }
   }
 
+  static getToken(uid) async {
+    var docSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    var fcmToken = docSnapshot.data()!['fcmToken'];
+
+    return fcmToken;
+  }
+
   static sentChatMessage(
       {required bool isVoiceMessage,
       required String message,
@@ -110,6 +125,7 @@ class ChatModel {
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
     String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
+    final NotificationRepo notificationRepo = NotificationRepo();
 
     final id = (_auth.currentUser!.uid +
             productDocs['productId'] +
@@ -129,6 +145,14 @@ class ChatModel {
             }
           ]),
           "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
+        }).then((value) async {
+          getToken(productDocs['uid']).then((token) async {
+            notificationRepo.sentNotification(
+              token: token,
+              title: productDocs['time'].toString(), 
+              body: message,
+              );
+          });
         });
       } else {
         doc.set({
@@ -145,6 +169,14 @@ class ChatModel {
             }
           ],
           "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
+        }).then((value){
+          getToken(productDocs['uid']).then((token) async {
+            notificationRepo.sentNotification(
+              token: token,
+              title: productDocs['time'].toString(), 
+              body: message,
+              );
+          });
         });
       }
     });

@@ -11,8 +11,8 @@ class CustomButton extends StatelessWidget {
       {required this.text,
       required this.onPressed,
       this.isLoading = false,
-        this.height = 50,
-        this.width = double.infinity,
+      this.height = 50,
+      this.width = double.infinity,
       Key? key})
       : super(key: key);
 
@@ -27,11 +27,16 @@ class CustomButton extends StatelessWidget {
         width: width,
         height: height,
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
             : Center(
                 child: Text(
                 text,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               )),
       ),
     );

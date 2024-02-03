@@ -3,36 +3,42 @@ import 'package:flutter/material.dart';
 class CustomTheme {
   static ThemeData get lightTheme {
     return ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: Colors.grey[300],
-      appBarTheme:
-          AppBarTheme(backgroundColor: Colors.grey[300], centerTitle: true),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-          refreshBackgroundColor: Colors.white,
-          color: Colors.black,
-          circularTrackColor: Colors.grey[300]),
-      brightness: Brightness.light,
-      canvasColor: Colors.black,
-      tabBarTheme: TabBarTheme(
-        indicatorColor: Colors.black,
-        unselectedLabelColor: Colors.grey,
-        labelColor: Colors.black,
-        overlayColor: MaterialStateProperty.all(Colors.grey[400]),
-        dividerColor: Colors.transparent,
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.black),
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.grey[300],
+        appBarTheme:
+            AppBarTheme(backgroundColor: Colors.grey[300], centerTitle: true),
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+            refreshBackgroundColor: Colors.white,
+            color: Colors.black,
+            circularTrackColor: Colors.grey[300]),
+        brightness: Brightness.light,
+        canvasColor: Colors.black,
+        tabBarTheme: TabBarTheme(
+          indicatorColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
+          labelColor: Colors.black,
+          overlayColor: MaterialStateProperty.all(Colors.grey[400]),
+          dividerColor: Colors.transparent,
         ),
-      ),
-      sliderTheme: const SliderThemeData(
-        trackHeight: 2,
-        thumbColor: Colors.black,
-        activeTrackColor: Colors.black,
-        inactiveTrackColor: Colors.grey,
-        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
-      ),
-    );
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.black),
+          ),
+        ),
+        sliderTheme: const SliderThemeData(
+          trackHeight: 2,
+          thumbColor: Colors.black,
+          activeTrackColor: Colors.black,
+          inactiveTrackColor: Colors.grey,
+          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+        ));
   }
 
   static ThemeData get darkTheme {
@@ -66,6 +72,9 @@ class CustomTheme {
         disabledInactiveTrackColor: Colors.black,
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
       ),
+      bottomSheetTheme: const BottomSheetThemeData(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))))
     );
   }
 }
