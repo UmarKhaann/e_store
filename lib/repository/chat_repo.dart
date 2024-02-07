@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/provider/voice_duration.dart';
+import 'package:e_store/repository/auth_repo.dart';
 import 'package:e_store/repository/notifications_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -145,13 +146,19 @@ class ChatModel {
             }
           ]),
           "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
-        }).then((value) async {
-          getToken(productDocs['uid']).then((token) async {
-            notificationRepo.sentNotification(
+        }).then((_) async {
+          List members = await value.data()!['members'];
+          
+
+          String uid =
+              AuthRepo.currentUserUid == members[0] ? members[1] : members[0];
+          getToken(uid).then((token) async {
+            notificationRepo.sentNoti(
               token: token,
-              title: productDocs['time'].toString(), 
-              body: message,
-              );
+              title: _auth.currentUser!.displayName!,
+              body: isVoiceMessage? "voice message" : message,
+              productDocs: productDocs,
+            );
           });
         });
       } else {
@@ -169,13 +176,18 @@ class ChatModel {
             }
           ],
           "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
-        }).then((value){
-          getToken(productDocs['uid']).then((token) async {
-            notificationRepo.sentNotification(
+        }).then((_) async{
+          List members = await value.data()!['members'];
+
+          String uid =
+              AuthRepo.currentUserUid == members[0] ? members[1] : members[0];
+          getToken(uid).then((token) async {
+            notificationRepo.sentNoti(
               token: token,
-              title: productDocs['time'].toString(), 
-              body: message,
-              );
+              title: _auth.currentUser!.displayName!,
+              body: isVoiceMessage? "voice message" : message,
+              productDocs: productDocs,
+            );
           });
         });
       }

@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
+import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/home_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../utils/routes/routes_name.dart';
 
 class ConversationsTab extends StatefulWidget {
   const ConversationsTab({Key? key}) : super(key: key);
@@ -98,7 +97,8 @@ class _ConversationsTabState extends State<ConversationsTab> {
                                           'productId': docs[reversedIndex]
                                               ['productId'],
                                           'title': docs[reversedIndex]
-                                              ['productName']
+                                              ['productName'],
+                                              'name' : docs[reversedIndex]['userName']
                                         };
                                         Navigator.pushNamed(
                                             context, RoutesName.chatView,

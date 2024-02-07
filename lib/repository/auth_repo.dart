@@ -83,7 +83,7 @@ class AuthRepo {
         .then((value) async {
       await setUserDetails();
 
-      repo.getDeviceToken().then((deviceToken) {
+      await repo.getDeviceToken().then((deviceToken) {
         FirebaseFirestore.instance
             .collection('users')
             .doc(currentUserUid)
@@ -135,7 +135,6 @@ class AuthRepo {
         await _auth.currentUser!.updatePassword(password);
         btnLoading.value = false;
         Utils.snackBarMessage(context, 'Saved changes successfully!');
-        return Future<void>;
       });
     } else {
       _fireStore.collection('users').doc(currentUserUid).update({

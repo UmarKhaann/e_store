@@ -196,9 +196,9 @@ class _AccountViewState extends State<AccountView> {
                 CustomButton(
                     text: 'Save',
                     isLoading: AuthRepo.btnLoading.value,
-                    onPressed: () {
+                    onPressed: () async{
                       if (formkey.currentState!.validate()) {
-                        AuthRepo.updateUserInfo(
+                        await AuthRepo.updateUserInfo(
                           context: context,
                           name: nameController.text,
                           email: emailController.text,

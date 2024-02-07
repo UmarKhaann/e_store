@@ -11,6 +11,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyD6C8laIjaBaoHqpq4DYD72Xi0dtmrllbQ',
+        appId: '1:592110491539:web:efdb9b192676e40ccdba66',
+        messagingSenderId: '592110491539',
+        projectId: 'e-store-4ab54'),
+  );
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -25,16 +37,7 @@ void main() async {
 }
 
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: 'AIzaSyD6C8laIjaBaoHqpq4DYD72Xi0dtmrllbQ',
-        appId: '1:592110491539:web:efdb9b192676e40ccdba66',
-        messagingSenderId: '592110491539',
-        projectId: 'e-store-4ab54'),
-  );
-}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

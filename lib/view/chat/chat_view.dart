@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/repository/chat_repo.dart';
+import 'package:e_store/repository/notifications_repo.dart';
 import 'package:e_store/res/components/custom_message_widget.dart';
 import 'package:e_store/res/components/sending_message_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,7 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> stream;
+  final NotificationRepo notificationRepo = NotificationRepo();
 
   @override
   void initState() {
@@ -33,6 +35,12 @@ class _ChatViewState extends State<ChatView> {
         .doc(id.toString())
         .snapshots();
     ChatModel.player.openPlayer();
+
+    notificationRepo.requestNotificationsPermission();
+    notificationRepo.forgroundMessage();
+    notificationRepo.firebaseInit(context, widget.productDocs);
+    notificationRepo.setupInteractMessage(context, widget.productDocs);
+    notificationRepo.isTokenRefresh();
     super.initState();
   }
 

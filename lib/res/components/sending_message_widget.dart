@@ -12,8 +12,11 @@ class SendingMessageWidget extends StatefulWidget {
   final ScrollController scrollController;
   final dynamic productDocs;
 
-  const SendingMessageWidget(
-      {required this.scrollController, required this.productDocs, super.key});
+  const SendingMessageWidget({
+    required this.scrollController,
+    required this.productDocs,
+    super.key,
+  });
 
   @override
   State<SendingMessageWidget> createState() => _SendingMessageWidgetState();
@@ -122,7 +125,8 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeInCirc);
                     } else {
-                      Utils.snackBarMessage(context, 'hold to record, release to send');
+                      Utils.snackBarMessage(
+                          context, 'hold to record, release to send');
                     }
                   },
                   onLongPress: () async {

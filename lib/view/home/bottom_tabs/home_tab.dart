@@ -25,7 +25,7 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    final String? image = HomeRepo.auth.currentUser!.photoURL;
+    final String? image = HomeRepo.auth.currentUser != null ? HomeRepo.auth.currentUser!.photoURL : null;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,

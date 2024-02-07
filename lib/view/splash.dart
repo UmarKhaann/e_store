@@ -13,15 +13,15 @@ class SplashView extends StatefulWidget {
 
 class _SplashViewState extends State<SplashView> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
-  final NotificationRepo notificationRepo = NotificationRepo();
+
+
 
   @override
   void initState() {
-    notificationRepo.requestNotificationsPermission();
-    notificationRepo.firebaseInit(context);
-    notificationRepo.setupInteractMessage(context);
-    notificationRepo.getDeviceToken().then((token) {
-      debugPrint('token: $token');
+
+
+
+
       if (currentUser == null) {
       Navigator.pushReplacementNamed(
         context,
@@ -36,7 +36,7 @@ class _SplashViewState extends State<SplashView> {
         );
       });
     }
-    });
+
     super.initState();
   }
 
