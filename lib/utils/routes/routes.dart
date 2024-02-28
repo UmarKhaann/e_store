@@ -15,28 +15,29 @@ class Routes {
   static MaterialPageRoute generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.homeView:
-        return MaterialPageRoute(builder: (_) => HomeView());
+        return MaterialPageRoute(builder: (_) => const HomeView());
 
       case RoutesName.loginView:
-        return MaterialPageRoute(builder: (_) => LoginView());
+        return MaterialPageRoute(builder: (_) => const LoginView());
 
       case RoutesName.signUpView:
-        return MaterialPageRoute(builder: (_) => SignUpView());
+        return MaterialPageRoute(builder: (_) => const SignUpView());
 
       case RoutesName.productDetailView:
         return MaterialPageRoute(
             builder: (_) => ProductDetailsView(docs: settings.arguments));
 
       case RoutesName.chatView:
-        return MaterialPageRoute(builder: (_) => ChatView(productDocs: settings.arguments));
+        return MaterialPageRoute(
+            builder: (_) => ChatView(data: settings.arguments));
       case RoutesName.favoritesView:
-        return MaterialPageRoute(builder: (_) => FavoritesView());
+        return MaterialPageRoute(builder: (_) => const FavoritesView());
       case RoutesName.profileView:
-        return MaterialPageRoute(builder: (_) => AccountView());
+        return MaterialPageRoute(builder: (_) => const AccountView());
       case RoutesName.splashView:
-        return MaterialPageRoute(builder: (_) => SplashView());
+        return MaterialPageRoute(builder: (_) => const SplashView());
       case RoutesName.notificationView:
-        return MaterialPageRoute(builder: (_) => NotificationView());
+        return MaterialPageRoute(builder: (_) => const NotificationView());
 
       default:
         return MaterialPageRoute(builder: (_) {

@@ -10,11 +10,11 @@ import 'holdable_icon_button.dart';
 
 class SendingMessageWidget extends StatefulWidget {
   final ScrollController scrollController;
-  final dynamic productDocs;
+  final dynamic data;
 
   const SendingMessageWidget({
     required this.scrollController,
-    required this.productDocs,
+    required this.data,
     super.key,
   });
 
@@ -117,7 +117,9 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                       ChatModel.sentChatMessage(
                           isVoiceMessage: false,
                           message: _chatController.text,
-                          productDocs: widget.productDocs);
+                          chatId: widget.data['chatId'],
+                        productId: widget.data['productId'],
+                      );
                       _chatController.clear();
                       _isTyping.value = false;
                       widget.scrollController.animateTo(
@@ -146,7 +148,9 @@ class _SendingMessageWidgetState extends State<SendingMessageWidget> {
                       ChatModel.sentChatMessage(
                           isVoiceMessage: true,
                           message: voiceMessageUrl,
-                          productDocs: widget.productDocs);
+                          chatId: widget.data['chatId'],
+                          productId: widget.data['productId'],
+                      );
                     }).then((value) {
                       Utils.snackBarMessage(
                           context, 'voice message send successfully');

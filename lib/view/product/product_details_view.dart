@@ -137,7 +137,10 @@ class ProductDetailsView extends StatelessWidget {
                         text: 'CHAT',
                         onPressed: () {
                           Navigator.pushNamed(context, RoutesName.chatView,
-                              arguments: docs);
+                              arguments: {
+                                'chatId': 'null',
+                                'productId': docs['productId'],
+                              });
                         }),
                   ],
                 ),

@@ -9,9 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatView extends StatefulWidget {
-  final dynamic productDocs;
+  final dynamic data;
 
-  const ChatView({required this.productDocs, Key? key}) : super(key: key);
+  const ChatView({required this.data, Key? key}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -19,27 +19,36 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> stream;
   final NotificationRepo notificationRepo = NotificationRepo();
+  String chatId = '';
+  String productName = '';
+
+  void initChat() async{
+    if (widget.data['chatId'] == 'null'){
+      await _firestore.collection('products').doc(widget.data['productId']).get().then((value) {
+        String uid = value.data()!['uid'];
+        productName = value.data()!['title'];
+        chatId = ((_auth.currentUser!.uid + widget.data['productId'] + uid).split('')..sort()..join()).toString();
+      });
+    } else {
+      await _firestore.collection('conversations').doc(chatId).get().then((value) => productName =  value.data()!['productName']);
+      chatId = widget.data['chatId'];
+    }
+    stream = _firestore.collection('conversations').doc(chatId).snapshots();
+  }
 
   @override
-  void initState() {
-    final id = (_auth.currentUser!.uid +
-            widget.productDocs['productId'] +
-            widget.productDocs['uid'])
-        .split('')
-      ..sort()
-      ..join();
-    stream = FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(id.toString())
-        .snapshots();
+  void initState(){
+    initChat();
+
     ChatModel.player.openPlayer();
 
     notificationRepo.requestNotificationsPermission();
     notificationRepo.forgroundMessage();
-    notificationRepo.firebaseInit(context, widget.productDocs);
-    notificationRepo.setupInteractMessage(context, widget.productDocs);
+    notificationRepo.firebaseInit(context);
+    notificationRepo.setupInteractMessage(context);
     notificationRepo.isTokenRefresh();
     super.initState();
   }
@@ -56,13 +65,14 @@ class _ChatViewState extends State<ChatView> {
         initialScrollOffset: MediaQuery.of(context).size.height * 1);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.productDocs['title'])),
+      appBar: AppBar(title: Text(productName)),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            Expanded(
+              child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                 stream: stream,
                 builder: (context,
                     AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
@@ -78,30 +88,40 @@ class _ChatViewState extends State<ChatView> {
                       return const Expanded(
                           child: Center(child: Text("there isn't any data")));
                     } else {
-                      return Expanded(
-                        child: CustomScrollView(
-                          controller: scrollController,
-                          slivers: [
-                            SliverList(
-                              delegate:
-                                  SliverChildBuilderDelegate((context, index) {
-                                final messages = data['messages'][index];
-                                final meCurrUser = messages['sender'] ==
-                                    _auth.currentUser!.uid;
-                                return CustomMessageWidget(
-                                    messages: messages, meCurrUser: meCurrUser,
-                                );
-                              }, childCount: data['messages'].length),
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: CustomScrollView(
+                              controller: scrollController,
+                              slivers: [
+                                SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                    final messages = data['messages'][index];
+                                    final meCurrUser = messages['sender'] ==
+                                        _auth.currentUser!.uid;
+                                    return CustomMessageWidget(
+                                      messages: messages,
+                                      meCurrUser: meCurrUser,
+                                    );
+                                  }, childCount: data['messages'].length),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     }
                   }
-                }),
+                },
+              ),
+            ),
             SendingMessageWidget(
               scrollController: scrollController,
-              productDocs: widget.productDocs,
+              data: {
+                'chatId': chatId,
+                'productId': widget.data['productId']
+              },
             ),
           ],
         ),

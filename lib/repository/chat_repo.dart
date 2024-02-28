@@ -27,13 +27,13 @@ class ChatModel {
     await voiceRecorder.startRecorder(
       toFile: voiceChatId,
     );
-    print('recording started');
+    debugPrint('recording started');
   }
 
   static Future stopRecording() async {
     final path = await voiceRecorder.stopRecorder();
     final audioPath = File(path!);
-    print('recording stopped');
+    debugPrint('recording stopped');
     return audioPath;
   }
 
@@ -107,7 +107,7 @@ class ChatModel {
                 ));
       }
     } else {
-      print('it should work now');
+      debugPrint('permission denied');
     }
   }
 
@@ -119,22 +119,20 @@ class ChatModel {
     return fcmToken;
   }
 
-  static sentChatMessage(
-      {required bool isVoiceMessage,
-      required String message,
-      required dynamic productDocs}) {
+  static sentChatMessage({
+    required bool isVoiceMessage,
+    required String message,
+    required String chatId,
+    required dynamic productId,
+  }) {
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat.MMMd().add_jm().format(now);
     String customFormattedDateTime = formattedDateTime.replaceAll(',', ' at');
     final NotificationRepo notificationRepo = NotificationRepo();
 
-    final id = (_auth.currentUser!.uid +
-            productDocs['productId'] +
-            productDocs['uid'])
-        .split('')
-      ..sort()
-      ..join();
-    final doc = _firestore.collection('conversations').doc(id.toString());
+    final productDocs = _firestore.collection('products').doc(productId);
+
+    final doc = _firestore.collection('conversations').doc(chatId);
     doc.get().then((value) {
       if (value.exists) {
         doc.update({
@@ -148,7 +146,6 @@ class ChatModel {
           "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
         }).then((_) async {
           List members = await value.data()!['members'];
-          
 
           String uid =
               AuthRepo.currentUserUid == members[0] ? members[1] : members[0];
@@ -156,38 +153,40 @@ class ChatModel {
             notificationRepo.sentNoti(
               token: token,
               title: _auth.currentUser!.displayName!,
-              body: isVoiceMessage? "voice message" : message,
-              productDocs: productDocs,
+              body: isVoiceMessage ? "voice message" : message,
+              chatId: chatId,
             );
           });
         });
       } else {
-        doc.set({
-          "members": [_auth.currentUser!.uid, productDocs['uid']],
-          "productId": productDocs['productId'],
-          "productName": productDocs['title'],
-          "imageUrl": productDocs['imageUrl'],
-          'userName': productDocs['name'],
-          "messages": [
-            {
-              "sender": _auth.currentUser!.uid,
-              isVoiceMessage ? "voiceMessage" : "message": message,
-              "time": customFormattedDateTime,
-            }
-          ],
-          "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
-        }).then((_) async{
-          List members = await value.data()!['members'];
+        productDocs.get().then((productDocs) {
+          doc.set({
+            "members": [_auth.currentUser!.uid, productDocs['uid']],
+            "productId": productDocs['productId'],
+            "productName": productDocs['title'],
+            "imageUrl": productDocs['imageUrl'],
+            'userName': productDocs['name'],
+            "messages": [
+              {
+                "sender": _auth.currentUser!.uid,
+                isVoiceMessage ? "voiceMessage" : "message": message,
+                "time": customFormattedDateTime,
+              }
+            ],
+            "lastMessageTime": DateTime.now().microsecondsSinceEpoch.toString(),
+          }).then((_) async {
+            List members = await value.data()!['members'];
 
-          String uid =
-              AuthRepo.currentUserUid == members[0] ? members[1] : members[0];
-          getToken(uid).then((token) async {
-            notificationRepo.sentNoti(
-              token: token,
-              title: _auth.currentUser!.displayName!,
-              body: isVoiceMessage? "voice message" : message,
-              productDocs: productDocs,
-            );
+            String uid =
+                AuthRepo.currentUserUid == members[0] ? members[1] : members[0];
+            getToken(uid).then((token) async {
+              notificationRepo.sentNoti(
+                token: token,
+                title: _auth.currentUser!.displayName!,
+                body: isVoiceMessage ? "voice message" : message,
+                chatId: chatId,
+              );
+            });
           });
         });
       }

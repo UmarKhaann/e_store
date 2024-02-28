@@ -4,7 +4,6 @@ import 'package:e_store/repository/home_repo.dart';
 import 'package:e_store/res/components/custom_input_field.dart';
 import 'package:e_store/utils/routes/routes_name.dart';
 import 'package:e_store/view_model/home_view_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +16,6 @@ class ConversationsTab extends StatefulWidget {
 
 class _ConversationsTabState extends State<ConversationsTab> {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   final TextEditingController searchController = TextEditingController();
 
   @override
@@ -86,23 +82,12 @@ class _ConversationsTabState extends State<ConversationsTab> {
                                         (docs.length - 1) - index;
                                     return ListTile(
                                       onTap: () {
-                                        final Map map = {
-                                          'uid': _auth.currentUser!.uid ==
-                                                  docs[reversedIndex]['members']
-                                                      [1]
-                                              ? docs[reversedIndex]['members']
-                                                  [0]
-                                              : docs[reversedIndex]['members']
-                                                  [1],
-                                          'productId': docs[reversedIndex]
-                                              ['productId'],
-                                          'title': docs[reversedIndex]
-                                              ['productName'],
-                                              'name' : docs[reversedIndex]['userName']
-                                        };
                                         Navigator.pushNamed(
                                             context, RoutesName.chatView,
-                                            arguments: map);
+                                            arguments: {
+                                              'chatId' : docs[reversedIndex].id,
+                                              'productId' : docs[reversedIndex]['productId']
+                                            });
                                       },
                                       leading: docs[reversedIndex]['imageUrl'].isEmpty? const CircleAvatar(
                                         backgroundColor: Colors.grey,
